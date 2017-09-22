@@ -21,12 +21,12 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using IBM.WatsonDeveloperCloud.Http;
 using IBM.WatsonDeveloperCloud.LanguageTranslator.v2.Model;
-using IBM.WatsonDeveloperCloud.Service;
 using Newtonsoft.Json.Linq;
 using System.Runtime.ExceptionServices;
-using IBM.WatsonDeveloperCloud.Http.Extensions;
+using IBM.VCA.Watson.Watson.Service;
+using IBM.VCA.Watson.Watson.Http;
+using IBM.VCA.Watson.Watson.Http.Extensions;
 
 namespace IBM.WatsonDeveloperCloud.LanguageTranslator.v2
 {

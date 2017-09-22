@@ -13,6 +13,12 @@ using TemplateCoreParis.Data;
 using TemplateCoreParis.Models;
 using TemplateCoreParis.Services;
 using Microsoft.AspNetCore.Identity;
+using static IBM.VCA.Watson.Watson.WatsonConversationService;
+using Microsoft.AspNetCore.Mvc.Razor;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
+using System.Security.Claims;
 
 namespace TemplateCoreParis
 {
@@ -50,33 +56,81 @@ namespace TemplateCoreParis
 
             services.Configure<IdentityOptions>(options =>
             {
+                options.Cookies.ApplicationCookie.AuthenticationScheme = "ApplicationCookie";
+                options.Lockout.AllowedForNewUsers = true;
+
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 5;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
+
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+                options.Lockout.MaxFailedAccessAttempts = 10;
+
             });
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(config =>
+            {
+                config.SignIn.RequireConfirmedEmail = true;
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddMvc();
+            // Register the IConfiguration instance which WatsonCredentials binds against.
+            services.Configure<WatsonCredentials>(Configuration);
+
+            services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });
+
+            services.AddMvc()
+                .AddViewLocalization(
+                    LanguageViewLocationExpanderFormat.Suffix,
+                    opts => { opts.ResourcesPath = "Resources"; })
+                .AddDataAnnotationsLocalization();
+
+            services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
+            services.AddSession();
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+
+            // Configure supported cultures and localization options
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new List<CultureInfo>
+                {
+                    new CultureInfo("es-PE"),
+                    new CultureInfo("en")
+                };
+
+                // State what the default culture for your application is. This will be used if no specific culture
+                // can be determined for a given request.
+                options.DefaultRequestCulture = new RequestCulture(culture: "es-PE", uiCulture: "es-PE");
+
+                // You must explicitly state which cultures your application supports.
+                // These are the cultures the app supports for formatting numbers, dates, etc.
+                options.SupportedCultures = supportedCultures;
+
+                // These are the cultures the app supports for UI strings, i.e. we have localized resources for.
+                options.SupportedUICultures = supportedCultures;
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(locOptions.Value);
+
+            app.UseDeveloperExceptionPage();
+
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseBrowserLink();
             }
@@ -90,6 +144,20 @@ namespace TemplateCoreParis
             app.UseIdentity();
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
+            app.UseGoogleAuthentication(new GoogleOptions()
+            {
+                ClientId = "876142884435-h1fj3n12pcboe58tastr040s6422oarc.apps.googleusercontent.com",
+                ClientSecret = "Y-Spk97cPYcTZIe57yEWtVgd"
+            });
+
+            app.UseFacebookAuthentication(new FacebookOptions()
+            {
+                AppId = "349798545440890",
+                AppSecret = "988010830a990de94b91aef7aabbf6b1"
+            });
+
+            // IMPORTANT: This session call MUST go before UseMvc()
+            app.UseSession();
 
             app.UseMvc(routes =>
             {
@@ -135,6 +203,7 @@ namespace TemplateCoreParis
                     LastName = "Pantigoso",
                     UserName = "parismiguel@gmail.com",
                     Email = "parismiguel@gmail.com",
+                    EmailConfirmed = true
                 };
 
                 string adminPassword = "Esfuerzo1";
@@ -158,6 +227,67 @@ namespace TemplateCoreParis
                 }
             }
         }
+
+        public class UserClaimsPrincipalFactory<TUser> : Microsoft.AspNetCore.Identity.IUserClaimsPrincipalFactory<TUser>
+        where TUser : class
+        {
+            public UserClaimsPrincipalFactory(
+                UserManager<TUser> userManager,
+                IOptions<IdentityOptions> optionsAccessor)
+            {
+                if (userManager == null)
+                {
+                    throw new ArgumentNullException(nameof(userManager));
+                }
+                if (optionsAccessor == null || optionsAccessor.Value == null)
+                {
+                    throw new ArgumentNullException(nameof(optionsAccessor));
+                }
+
+                UserManager = userManager;
+                Options = optionsAccessor.Value;
+            }
+
+            public UserManager<TUser> UserManager { get; private set; }
+
+            public IdentityOptions Options { get; private set; }
+
+            public virtual async Task<ClaimsPrincipal> CreateAsync(TUser user)
+            {
+                if (user == null)
+                {
+                    throw new ArgumentNullException(nameof(user));
+                }
+
+                var userId = await UserManager.GetUserIdAsync(user);
+                var userName = await UserManager.GetUserNameAsync(user);
+                var id = new ClaimsIdentity(Options.Cookies.ApplicationCookieAuthenticationScheme,
+                    Options.ClaimsIdentity.UserNameClaimType,
+                    Options.ClaimsIdentity.RoleClaimType);
+                id.AddClaim(new Claim(Options.ClaimsIdentity.UserIdClaimType, userId));
+                id.AddClaim(new Claim(Options.ClaimsIdentity.UserNameClaimType, userName));
+                if (UserManager.SupportsUserSecurityStamp)
+                {
+                    id.AddClaim(new Claim(Options.ClaimsIdentity.SecurityStampClaimType,
+                        await UserManager.GetSecurityStampAsync(user)));
+                }
+                if (UserManager.SupportsUserRole)
+                {
+                    var roles = await UserManager.GetRolesAsync(user);
+                    foreach (var roleName in roles)
+                    {
+                        id.AddClaim(new Claim(Options.ClaimsIdentity.RoleClaimType, roleName));
+                    }
+                }
+                if (UserManager.SupportsUserClaim)
+                {
+                    id.AddClaims(await UserManager.GetClaimsAsync(user));
+                }
+
+                return new ClaimsPrincipal(id);
+            }
+        }
+
 
     }
 }

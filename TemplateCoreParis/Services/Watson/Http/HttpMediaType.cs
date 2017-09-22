@@ -17,7 +17,7 @@
 
 using System;
 
-namespace IBM.WatsonDeveloperCloud.Http
+namespace IBM.VCA.Watson.Watson.Http
 {
     public static class HttpMediaType
     {

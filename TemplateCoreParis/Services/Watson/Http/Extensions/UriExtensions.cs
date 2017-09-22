@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
-namespace IBM.WatsonDeveloperCloud.Http.Extensions
+namespace IBM.VCA.Watson.Watson.Http.Extensions
 {
     internal static class UriExtensions
     {
@@ -29,11 +29,7 @@ namespace IBM.WatsonDeveloperCloud.Http.Extensions
             string queryString = string.Join("&",
                 from argument in arguments
                 let key = WebUtility.UrlEncode(argument.Key)
-                let value = argument.Value != null ?
-                                argument.Value is bool ? 
-                                    WebUtility.UrlEncode(argument.Value.ToString().ToLower()) : 
-                                        WebUtility.UrlEncode(argument.Value.ToString()) : 
-                                            string.Empty
+                let value = argument.Value != null ? WebUtility.UrlEncode(argument.Value.ToString()) : string.Empty
                 select key + "=" + value
             );
             return new Uri(

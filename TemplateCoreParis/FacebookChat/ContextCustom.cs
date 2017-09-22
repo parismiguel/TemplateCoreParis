@@ -36,6 +36,18 @@ namespace TemplateCoreParis.FacebookChat
         [JsonProperty("action")]
         public string Action { get; set; }
 
+        [JsonProperty("password")]
+        public string Password { get; set; }
+
+        [JsonProperty("email")]
+        public string Email { get; set; }
+
+        [JsonProperty("error")]
+        public string Error { get; set; }
+
+        [JsonProperty("username")]
+        public string UserName { get; set; }
+
         [JsonProperty("validate")]
         public bool Validate { get; set; }
 

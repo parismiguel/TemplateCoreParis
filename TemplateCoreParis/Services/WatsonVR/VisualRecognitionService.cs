@@ -17,14 +17,14 @@
 
 using System;
 using System.Collections.Generic;
-using IBM.WatsonDeveloperCloud.Service;
 using IBM.WatsonDeveloperCloud.VisualRecognition.v3.Model;
-using IBM.WatsonDeveloperCloud.Http;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.IO;
+using IBM.VCA.Watson.Watson.Http;
+using IBM.VCA.Watson.Watson.Service;
 
 namespace IBM.WatsonDeveloperCloud.VisualRecognition.v3
 {

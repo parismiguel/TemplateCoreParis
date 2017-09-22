@@ -18,20 +18,20 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using IBM.WatsonDeveloperCloud.Util.Attributes;
+using IBM.VCA.Watson.Watson.Util.Attributes;
 
-namespace IBM.WatsonDeveloperCloud.Util.Extensions
+namespace IBM.VCA.Watson.Watson.Extensions
 {
     public static class DescriptionExtension
     {
-        //public static string Description(this Enum value)
-        //{
-        //    DescriptionAttribute attribute = value.GetType()
-        //        .GetField(value.ToString())
-        //        .GetCustomAttributes(typeof(DescriptionAttribute), false)
-        //        .SingleOrDefault() as DescriptionAttribute;
+        public static string Description(this Enum value)
+        {
+            DescriptionAttribute attribute = value.GetType()
+                .GetField(value.ToString())
+                .GetCustomAttributes(typeof(DescriptionAttribute), false)
+                .SingleOrDefault() as DescriptionAttribute;
 
-        //    return attribute == null ? value.ToString() : attribute.Description;
-        //}
+            return attribute == null ? value.ToString() : attribute.Description;
+        }
     }
 }

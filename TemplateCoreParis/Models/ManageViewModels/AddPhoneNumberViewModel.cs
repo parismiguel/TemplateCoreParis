@@ -10,7 +10,7 @@ namespace TemplateCoreParis.Models.ManageViewModels
     {
         [Required]
         [Phone]
-        [Display(Name = "Phone number")]
+        [Display(Name = "Número Telefónico")]
         public string PhoneNumber { get; set; }
     }
 }

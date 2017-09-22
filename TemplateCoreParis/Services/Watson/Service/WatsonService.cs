@@ -16,9 +16,9 @@
 */
 
 using System;
-using IBM.WatsonDeveloperCloud.Http;
+using IBM.VCA.Watson.Watson.Http;
 
-namespace IBM.WatsonDeveloperCloud.Service
+namespace IBM.VCA.Watson.Watson.Service
 {
     public abstract class WatsonService : IWatsonService
     {

@@ -21,9 +21,9 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Text;
-using IBM.WatsonDeveloperCloud.Http.Filters;
+using IBM.VCA.Watson.Watson.Http.Filters;
 
-namespace IBM.WatsonDeveloperCloud.Http
+namespace IBM.VCA.Watson.Watson.Http
 {
     public class WatsonHttpClient : IClient
     {
@@ -71,13 +71,10 @@ namespace IBM.WatsonDeveloperCloud.Http
 
         public IClient WithAuthentication(string userName, string password)
         {
-            if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
-            {
-                string auth = string.Format("{0}:{1}", userName, password);
-                string auth64 = Convert.ToBase64String(Encoding.ASCII.GetBytes(auth));
+            string auth = string.Format("{0}:{1}", userName, password);
+            string auth64 = Convert.ToBase64String(Encoding.ASCII.GetBytes(auth));
 
-                this.BaseClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", auth64);
-            }
+            this.BaseClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", auth64);
 
             return this;
         }

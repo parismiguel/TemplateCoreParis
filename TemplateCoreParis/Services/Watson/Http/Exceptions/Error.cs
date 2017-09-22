@@ -17,7 +17,7 @@
 
 using Newtonsoft.Json;
 
-namespace IBM.WatsonDeveloperCloud.Http.Exceptions
+namespace IBM.VCA.Watson.Watson.Http.Exceptions
 {
     [JsonConverter(typeof(ErrorConverter))]
     public class Error

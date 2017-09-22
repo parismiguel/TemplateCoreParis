@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Formatting;
-using IBM.WatsonDeveloperCloud.Http.Filters;
+using IBM.VCA.Watson.Watson.Http.Filters;
 
-namespace IBM.WatsonDeveloperCloud.Http
+namespace IBM.VCA.Watson.Watson.Http
 {
     public interface IClient : IDisposable
     {

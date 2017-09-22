@@ -17,7 +17,7 @@
 
 using System;
 
-namespace IBM.WatsonDeveloperCloud.Util.Attributes
+namespace IBM.VCA.Watson.Watson.Util.Attributes
 {
     [AttributeUsage(AttributeTargets.Field)]
     public class DescriptionAttribute : Attribute

@@ -10,6 +10,7 @@ namespace TemplateCoreParis.Models.AccountViewModels
     {
         [Required]
         [EmailAddress]
+        [Display(Name = "Correo Electrónico")]
         public string Email { get; set; }
 
         [Required]

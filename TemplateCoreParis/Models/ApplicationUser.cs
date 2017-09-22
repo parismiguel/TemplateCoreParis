@@ -7,7 +7,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TemplateCoreParis.Models
 {
-    // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
         [Required]
@@ -26,5 +25,12 @@ namespace TemplateCoreParis.Models
 
         [Display(Name = "Cumpleaños")]
         public DateTime? Birthday { get; set; }
+
+        [Display(Name = "Pregunta Secreta")]
+        public string SecretQuestion { get; set; }
+
+        [Display(Name = "Respuesta Secreta")]
+        public string SecretResponse { get; set; }
+
     }
 }

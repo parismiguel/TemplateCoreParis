@@ -9,14 +9,14 @@ namespace TemplateCoreParis.Models.ManageViewModels
     public class SetPasswordViewModel
     {
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "El {0} debe ser mínimo de {2} y máximo de {1} caracteres de longitud.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "New password")]
+        [Display(Name = "Nueva Clave")]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [Display(Name = "Confirmar clave")]
+        [Compare("NewPassword", ErrorMessage = "La Clave y la Confirmación de la clave no coinciden.")]
         public string ConfirmPassword { get; set; }
     }
 }

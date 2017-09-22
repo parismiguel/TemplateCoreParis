@@ -17,7 +17,7 @@
 
 using System.IO;
 
-namespace IBM.WatsonDeveloperCloud.Http.Extensions
+namespace IBM.VCA.Watson.Watson.Http.Extensions
 {
     public static class StreamExtension
     {

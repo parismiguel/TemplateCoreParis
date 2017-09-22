@@ -19,8 +19,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using static IBM.WatsonDeveloperCloud.Conversation.v1.WatsonConversationService;
-using IBM.WatsonDeveloperCloud.Conversation.v1.Model;
 using TemplateCoreParis.Data;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
@@ -29,6 +27,9 @@ using Tecactus.Api.Reniec;
 using Twilio;
 using Twilio.Types;
 using Twilio.Rest.Api.V2010.Account;
+using static IBM.VCA.Watson.Watson.WatsonConversationService;
+using IBM.VCA.Watson.Watson.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace TemplateCoreParis.FacebookChat
 {
@@ -47,7 +48,6 @@ namespace TemplateCoreParis.FacebookChat
         private readonly ApplicationDbContext _context;
 
         private readonly IServiceProvider _provider;
-
 
         public FacebookBotController(ApplicationDbContext context, IServiceProvider provider)
         {
@@ -466,7 +466,7 @@ namespace TemplateCoreParis.FacebookChat
         {
             if (result.Intents != null)
             {
-                string myIntent = result.Intents[0].Intent;
+                string myIntent = result.Intents[0].IntentDescription;
 
                 switch (myIntent)
                 {

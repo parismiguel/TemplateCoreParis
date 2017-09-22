@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using Twilio.Types;
 
 namespace TemplateCoreParis.Services
 {
@@ -16,9 +19,38 @@ namespace TemplateCoreParis.Services
             return Task.FromResult(0);
         }
 
+        public static SMSoptions Options = new SMSoptions()
+        {
+            SMSAccountIdentification = "AC7354ea9b406aed6252047ba36b3c5d01",
+            SMSAccountPassword = "47bafd79cfe0ec238f9216b9932fd27a",
+            SMSAccountFrom = "+15126452521"
+        };
+
         public Task SendSmsAsync(string number, string message)
         {
-            // Plug in your SMS service here to send a text message.
+            try
+            {
+                var accountSid = Options.SMSAccountIdentification;
+                var authToken = Options.SMSAccountPassword;
+
+                TwilioClient.Init(accountSid, authToken);
+
+                number = "+" + number;
+
+                var msg = MessageResource.Create(
+                  to: new PhoneNumber(number),
+                  from: new PhoneNumber(Options.SMSAccountFrom),
+                  body: message);
+
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.InnerException);
+            }
+
+
+
             return Task.FromResult(0);
         }
     }

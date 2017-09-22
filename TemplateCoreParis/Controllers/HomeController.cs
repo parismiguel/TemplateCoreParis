@@ -15,14 +15,14 @@ namespace TemplateCoreParis.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "Plantilla VCA";
 
             return View();
         }
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["Message"] = "Estamos atentos para atenderlo!";
 
             return View();
         }

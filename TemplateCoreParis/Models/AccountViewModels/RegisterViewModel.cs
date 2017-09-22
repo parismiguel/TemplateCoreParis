@@ -10,18 +10,36 @@ namespace TemplateCoreParis.Models.AccountViewModels
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "Correo Electrónico")]
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "El {0} debe ser mínimo de {2} y máximo de {1} caracteres de longitud.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Clave")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "Confirmar clave")]
+        [Compare("Password", ErrorMessage = "La Clave y la Confirmación de la clave no coinciden.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "Nombres")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Apellidos")]
+        public string LastName { get; set; }
+
+        [Display(Name = "DNI")]
+        public int DocIdentity { get; set; }
+
+        [Display(Name = "Cargo")]
+        public string Title { get; set; }
+
+        [Display(Name = "Cumpleaños")]
+        public DateTime? Birthday { get; set; }
+
     }
 }

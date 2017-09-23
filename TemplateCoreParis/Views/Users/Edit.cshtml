@@ -1,4 +1,4 @@
-@model TemplateCoreParis.Models.ApplicationUser
+﻿@model TemplateCoreParis.Models.ApplicationUser
 
 @{
     ViewData["Title"] = "Editar Usuario";
@@ -52,6 +52,16 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
         </div>
+
+        <div class="form-group">
+            <label asp-for="PhoneNumber" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PhoneNumber" class="form-control" type="text" id="mask_phone" />
+                <span class="help-block"> +(999) 9999-9999 </span>
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+        </div>
+
         <div class="form-group">
             <label asp-for="Birthday" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -61,6 +71,29 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label asp-for="SecretQuestion" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+
+                <select asp-for="SecretQuestion" class="form-control">
+                    <option value="¿Cuál es su color favorito?">¿Cuál es su color favorito?</option>
+                    <option value="¿Como se llama su mascota?">¿Como se llama su mascota?</option>
+                    <option value="¿Quien es su personaje de ficción favorito?">¿Quien es su personaje de ficción favorito?</option>
+                    <option value="¿Dónde fue su primer viaje?">¿Dónde fue su primer viaje?</option>
+                </select>
+
+
+                <span asp-validation-for="SecretQuestion" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="SecretResponse" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="SecretResponse" class="form-control" />
+                <span asp-validation-for="SecretResponse" class="text-danger"></span>
+            </div>
+        </div>
 
        
         <div class="form-group">
@@ -87,4 +120,13 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+<script src="~/js/metronic/jquery.inputmask.bundle.min.js"></script>
+
+<script>
+        $(function () {
+            $("#mask_phone").inputmask("mask", { mask: "(999) 9999-9999" })
+        });
+</script>
 }

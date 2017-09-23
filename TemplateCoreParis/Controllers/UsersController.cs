@@ -11,6 +11,7 @@ using System.IO;
 using TemplateCoreParis.Models;
 using TemplateCoreParis.Data;
 using Microsoft.AspNetCore.Authorization;
+using TemplateCoreParis.WebChat;
 
 namespace TemplateCoreParis.Controllers
 {
@@ -108,6 +109,10 @@ namespace TemplateCoreParis.Controllers
                 return NotFound();
             }
 
+            var _decrypt = Helpers.Helpers.DecryptString(applicationUser.SecretResponse, ChatBotController._keyEncode);
+
+            applicationUser.SecretResponse = _decrypt;
+
             return View(applicationUser);
         }
 
@@ -128,6 +133,7 @@ namespace TemplateCoreParis.Controllers
                 try
                 {
                     var user = await _userManager.FindByIdAsync(applicationUser.Id);
+                    var _encrypt = Helpers.Helpers.EncryptString(applicationUser.SecretResponse, ChatBotController._keyEncode);
 
                     user.FirstName = applicationUser.FirstName;
                     user.LastName = applicationUser.LastName;
@@ -135,6 +141,9 @@ namespace TemplateCoreParis.Controllers
                     user.DocIdentity = applicationUser.DocIdentity;
                     user.Title = applicationUser.Title;
                     user.EmailConfirmed = applicationUser.EmailConfirmed;
+                    user.PhoneNumber = applicationUser.PhoneNumber;
+                    user.SecretQuestion = applicationUser.SecretQuestion;
+                    user.SecretResponse = _encrypt;
 
                     //add user to the datacontext (database) and save changes
                     _context.Update(user);

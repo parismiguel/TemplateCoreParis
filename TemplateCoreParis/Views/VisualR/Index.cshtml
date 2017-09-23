@@ -1,0 +1,168 @@
+﻿@{
+    ViewData["Title"] = "IBM Análisis de Imágen - Reconocimiento Visual";
+}
+
+@section Styles{
+    <style>
+
+        div.card {
+            border-style: solid;
+            margin: 2rem 0;
+            border-color: lightgray;
+            padding: 1rem;
+        }
+
+        a.btn-block {
+            text-align: left;
+            font-size: x-large;
+            margin: 1rem 0;
+        }
+
+        #imgRequest {
+            height: 30rem;
+            margin-top: 1rem;
+        }
+    </style>
+}
+
+<div class="row">
+
+
+    <a class="btn btn-primary btn-block">
+        @ViewData["Title"]
+    </a>
+
+    <div id="divVR" class="collapse in" aria-expanded="true">
+
+        <div class="card">
+            <div class="form-group">
+                <label for="urlVRrequest">URL Imágen</label>
+                <input class="form-control" type="text" id="urlVRrequest" placeholder="Ingrese la URL de la imagen a analizar" value="@ViewData["defaultURL"]" />
+            </div>
+
+            <div class="form-group">
+                <label for="classifierID">Classifier ID</label>
+                <input class="form-control" type="text" id="classifierID" placeholder="Opcional... (Default: VCAStaff_627807617)" value="" />
+            </div>
+
+            <button id="btnVRrequest" class="btn btn-danger">Analizar</button>
+
+            <img src="#" id="imgRequest" class="img-responsive hidden" />
+
+        </div>
+    </div>
+
+    <a class="btn btn-success btn-block" data-toggle="collapse" href="#vrClassifierResult" aria-expanded="true" aria-controls="vrClassifierResult">
+        Clasificador Entrenado
+    </a>
+
+    <div id="vrClassifierResult" style="margin-top:1rem;margin-bottom:1rem;" class="collapse in" aria-expanded="true"></div>
+
+    <a class="btn btn-info btn-block" data-toggle="collapse" href="#vrFaceResult" aria-expanded="true" aria-controls="vrFaceResult">
+        Detección de Rostro
+    </a>
+
+    <div id="vrFaceResult" style="margin-top:1rem;margin-bottom:1rem;" class="collapse in" aria-expanded="true"></div>
+
+    <a class="btn btn-warning btn-block" data-toggle="collapse" href="#vrObjectResult" aria-expanded="true" aria-controls="vrObjectResult">
+        Detalles de Objeto
+    </a>
+
+    <div id="vrObjectResult" style="margin-top:1rem;margin-bottom:1rem;" class="collapse in" aria-expanded="true"></div>
+
+</div>
+
+
+@section Scripts {
+
+    <script src="~/lib/renderjson.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+
+            $('#btnVRrequest').click(function () {
+
+                var _url = $("#urlVRrequest").val();
+                var _classifierID = $("#classifierID").val();
+
+                if (_url == null || _url == undefined || _url == "") {
+                    alert("Debe ingresar una URL de imágen");
+                    return;
+                }
+
+                $("#imgRequest").removeClass("hidden");
+
+                $("#imgRequest").attr("src", _url);
+
+                $("#vrClassifierResult").html(null);
+                $("#vrFaceResult").html(null);
+                $("#vrObjectResult").html(null);
+                $("#vrMicrosoftResult").html(null);
+
+
+                //Classifier detection
+
+                var object = $.ajax({
+                    url: '@Url.Action("ClassifyGetCustom", "VisualR")',
+                        method: 'POST',
+                        data: { _imageUrl: _url, _classifier: _classifierID }
+                });
+
+                object.done(function (obj) {
+                    $("#vrClassifierResult").addClass("alert alert-success");
+
+                    $("#vrClassifierResult").html(renderjson.set_show_to_level(7)(obj));
+
+                    });
+
+                object.fail(function (jqXHR, textStatus) {
+                        alert("Error de sistema: " + textStatus);
+                });
+
+
+
+                //Object detection
+
+                var object = $.ajax({
+                    url: '@Url.Action("ClassifyGet", "VisualR")',
+                        method: 'POST',
+                        data: { _imageUrl: _url }
+                });
+
+                object.done(function (obj) {
+                    $("#vrObjectResult").addClass("alert alert-info");
+
+                    $("#vrObjectResult").html(renderjson.set_show_to_level(7)(obj));
+
+                    });
+
+                object.fail(function (jqXHR, textStatus) {
+                        alert("Error de sistema: " + textStatus);
+                });
+
+
+                //Face recognition
+
+                 var faces = $.ajax({
+                        url: '@Url.Action("DetectFacesGet", "VisualR")',
+                        method: 'POST',
+                        data: { _faceUrl: _url }
+                });
+
+                 faces.done(function (obj) {
+                    $("#vrFaceResult").addClass("alert alert-warning");
+
+                    $("#vrFaceResult").html(renderjson.set_show_to_level(7)(obj));
+
+                    });
+
+                 faces.fail(function (jqXHR, textStatus) {
+                        alert("Error de sistema: " + textStatus);
+                 });
+
+            });
+
+        }); //End Init
+
+    </script>
+}

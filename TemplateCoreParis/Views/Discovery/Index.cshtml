@@ -1,0 +1,914 @@
+﻿@model IBM.WatsonDeveloperCloud.Discovery.v1.Model.ListEnvironmentsResponse
+
+@section Styles{
+    <link href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <style type="text/css">
+        div.card {
+            border-style: solid;
+            margin: 2rem 0;
+            border-color: lightgray;
+            padding: 1rem;
+        }
+
+        a.btn-block {
+            text-align: left;
+            font-size: x-large;
+            margin: 1rem 0;
+        }
+    </style>
+}
+
+@{
+    ViewData["Title"] = "Watson Discovery Service";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+
+<a class="btn btn-primary btn-block" data-toggle="collapse" href="#divEnvironment" aria-expanded="true" aria-controls="divEnvironment">
+    Listado de Entornos
+</a>
+
+
+<div id="divEnvironment" class="collapse in" aria-expanded="true">
+    <table id="tblEnviroment" class="display" cellspacing="0" style="margin:0;">
+        <thead>
+            <tr>
+                <th>environment_id</th>
+                <th>name</th>
+                @*<th>description</th>
+                    <th>created</th>
+                    <th>updated</th>*@
+                <th>read_only</th>
+            </tr>
+        </thead>
+
+    </table>
+</div>
+
+
+<a class="btn btn-primary btn-block" data-toggle="collapse" href="#divConfig" aria-expanded="true" aria-controls="divConfig">
+    Configuraciones <span style="font-size:small">(consultar para asociar modelo)</span>
+</a>
+
+
+<div id="divConfig" class="collapse">
+
+    <table id="tblConfigurations" class="display" cellspacing="0" style="margin:0;">
+        <thead>
+            <tr>
+                <th>configuration_id</th>
+                <th>name</th>
+                @*<th>description</th>
+                    <th>created</th>
+                    <th>updated</th>*@
+            </tr>
+        </thead>
+
+    </table>
+
+    <div class="card">
+        <div class="form-group">
+            <label for="queryCreateConfig">Nombre Configuración</label>
+            <input class="form-control" type="text" id="queryCreateConfig" placeholder="Ingrese nombre de configuración" />
+        </div>
+
+        <div class="form-group">
+            <label for="queryCreateModel">Model ID</label>
+            <input class="form-control" type="text" id="queryCreateModel" placeholder="Ingrese ID de modelo" />
+        </div>
+
+        <button id="btnCreateConfig" class="btn btn-warning">Crear</button>
+
+        <p id="pCreateConfig"></p>
+
+    </div>
+    <div class="card">
+        <div class="form-group">
+            <label for="queryConfigID">ID Configuración</label>
+            <input class="form-control" type="text" id="queryConfigID" placeholder="Seleccione su configuración" />
+        </div>
+
+        <button id="btnConfigID" class="btn btn-success">Consultar</button>
+        <button id="btnEliminarConfig" class="btn btn-danger">Eliminar</button>
+
+        <p id="pConfigID"></p>
+    </div>
+
+
+    <div class="card" id="divModelUpdate" hidden>
+        <div class="form-group">
+            <label for="queryModelID">ID Model</label>
+            <input class="form-control" type="text" id="queryModelID" value="@ViewData["modelID"]" placeholder="Seleccione su modelo" />
+        </div>
+
+        <button id="btnModelID" class="btn btn-success">Actualizar</button>
+
+        <p id="pModelID"></p>
+    </div>
+</div>
+
+
+
+<a class="btn btn-primary btn-block" data-toggle="collapse" href="#divCollections" aria-expanded="true" aria-controls="divCollections">
+    Colecciones <span style="font-size:small">(consultar para ver cantidad de documentos)</span>
+</a>
+
+<div id="divCollections" class="collapse">
+    <table id="tblCollections" class="display" cellspacing="0" style="margin:0;">
+        <thead>
+            <tr>
+                <th>collection_id</th>
+                <th>name</th>
+                @*<th>description</th>
+                    <th>created</th>
+                    <th>updated</th>*@
+                <th>configuration_id</th>
+                <th>language</th>
+            </tr>
+        </thead>
+
+    </table>
+
+
+    <div class="card">
+        <div class="form-group">
+            <label for="queryCreateCollectionName">Nombre Colección</label>
+            <input class="form-control" type="text" id="queryCreateCollectionName" placeholder="Ingrese nombre de colección" />
+        </div>
+        <div class="form-group">
+            <label for="queryCreateCollectionConfig">Configuración ID</label>
+            <input class="form-control" type="text" id="queryCreateCollectionConfig" placeholder="Ingrese ID de configuración" />
+        </div>
+
+        <button id="btnCreateCollection" class="btn btn-warning">Crear</button>
+
+        <p id="pCreateCollection"></p>
+    </div>
+
+    <div class="card">
+        <div class="form-group">
+            <label for="queryCollectionID">ID Collection</label>
+            <input class="form-control" type="text" id="queryCollectionID" placeholder="Seleccione su colección" />
+        </div>
+
+        <button id="btnCollectionID" class="btn btn-success">Consultar</button>
+        <button id="btnEliminarCollectionID" class="btn btn-danger">Eliminar</button>
+
+        <p id="pCollectionID"></p>
+    </div>
+</div>
+
+
+
+
+<a class="btn btn-primary btn-block" data-toggle="collapse" href="#divDocuments" aria-expanded="true" aria-controls="divDocuments">
+    Documentos
+</a>
+
+<div id="divDocuments" class="collapse">
+    <p id="jsonDocuments">@ViewData["Documents"]</p>
+
+    <div class="card">
+
+        <div class="form-group">
+            <label for="documentCollectionID">ID Colección</label>
+            <input class="form-control" type="text" id="documentCollectionID" placeholder="Seleccione su colección" />
+        </div>
+
+        <div class="form-group">
+            <label for="documentConfigID">ID Configuración</label>
+            <input class="form-control" type="text" id="documentConfigID" placeholder="Seleccione su configuración" />
+        </div>
+
+
+        <div class="form-group">
+            <label for="queryDocumentID">ID Documento</label>
+            <input class="form-control" type="text" id="queryDocumentID" placeholder="Seleccione su documento" />
+        </div>
+
+        <button id="btnEliminarDocumentID" class="btn btn-danger">Eliminar</button>
+        <button id="btnSaveDocument" type="submit" class="btn btn-success">Agregar Documento</button>
+        <button id="btnDetailsDocument" type="submit" class="btn btn-primary">Detalles</button>
+
+        <div id="createdDoc" style="margin-top:1rem;margin-bottom:1rem;"></div>
+    </div>
+</div>
+
+<a class="btn btn-primary btn-block" data-toggle="collapse" href="#divQuery" aria-expanded="true" aria-controls="divQuery">
+    Consultas
+</a>
+
+
+<div id="divQuery" class="collapse in" aria-expanded="true">
+    <div class="card">
+        <div class="form-group">
+            <label for="queryEnviromentID">ID Ambiente</label>
+            <input class="form-control" type="text" id="queryEnviromentID" />
+        </div>
+
+        <div class="form-group">
+            <label for="queryCollectionIDRequest">ID Colección</label>
+            <input class="form-control" type="text" id="queryCollectionIDRequest" />
+        </div>
+
+        <div class="form-group">
+            <label for="queryInput">¿Qué le provoca hoy?</label>
+            <input class="form-control" type="text" id="queryInput" value="@ViewData["queryDefault"]" />
+        </div>
+
+        <button id="btnQuery" class="btn btn-success">Consultar</button>
+
+        <button id="btnGoogle" class="btn btn-danger">Google</button>
+
+    </div>
+
+    <div id="queryNLUparse" class="alert alert-info hidden" style="display:inline-grid;"></div>
+
+    <div id="queryLinks" class="alert alert-warning hidden" style="display: inline-grid;"></div>
+
+    <table id="tableEntities" class="table table-bordered table-responsive table-striped">
+        <tbody></tbody>
+    </table>
+
+    <div id="queryResults" class="hidden">
+        <p id="pQueryParsed" class="alert alert-danger" style="margin-top:2rem;"></p>
+        <p id="pQueryKeyWord" class="alert alert-success" style="margin-top:2rem;"></p>
+        <p id="pQueryOutPut" class="alert alert-warning" style="margin-top:2rem;"></p>
+    </div>
+
+
+</div>
+
+<div id="wait" style="display:none;width:69px;height:89px;border:1px solid black;position:relative;top:50%;left:50%;padding:2px;">
+    <img src='~/images/demo_wait.gif' width="64" height="64" /><br>Cargando...
+</div>
+
+@section Scripts {
+
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/renderjson.js"></script>
+
+    <script type="text/javascript">
+        $.extend(true, $.fn.dataTable.defaults, {
+            lengthChange: false,
+            searching: false,
+            language: {
+                lengthMenu: "Mostrar _MENU_ registros por página.",
+                zeroRecords: "Lo sentimos. No se encontraron registros.",
+                info: "Mostrando página _PAGE_ de _PAGES_",
+                infoEmpty: "No hay registros aún.",
+                infoFiltered: "(filtrados de un total de _MAX_ registros)",
+                search: "Búsqueda",
+                LoadingRecords: "Cargando ...",
+                Processing: "Procesando...",
+                SearchPlaceholder: "Comience a teclear...",
+                paginate: {
+                    previous: "Anterior",
+                    next: "Siguiente"
+                }
+            }
+        });
+
+        $(function () {
+
+            $(document).ajaxStart(function () {
+                $("#wait").css("display", "block");
+            });
+
+            $(document).ajaxComplete(function () {
+                $("#wait").css("display", "none");
+            });
+
+            $("#btnQuery").on("click", function () {
+                var _environmentid = $("#queryEnviromentID").val();
+                var _collectionid = $("#queryCollectionIDRequest").val();
+                var _queryrequest = $("#queryInput").val();
+
+                var _dish;
+                var _district;
+                var _country;
+
+                if (_environmentid == undefined) {
+                    alert("Debe ingresar un ID de Ambiente");
+                    return;
+                }
+
+                if (_collectionid == undefined) {
+                    alert("Debe ingresar un ID de Colección");
+                    return;
+                }
+
+                if (_queryrequest == undefined) {
+                    alert("Debe ingresar una consulta");
+                    return;
+                }
+
+                if (!$("#queryResults").hasClass("hidden")) {
+                    $("#queryResults").addClass("hidden");
+                }
+
+                if (!$("#queryLinks").hasClass("hidden")) {
+                    $("#queryLinks").addClass("hidden");
+                }
+
+                //Parse Request with NLU
+                 $.ajax({
+                    url: '@Url.Action("QueryNLUparser", "Discovery")',
+                    method: 'POST',
+                    data: { queryRaw: _queryrequest }
+                 }).done(function (response) {
+                     $("#queryNLUparse").html(renderjson.set_show_to_level(1)(response));
+                     $("#queryNLUparse").removeClass("hidden");
+
+                     $("#tableEntities > tbody").html(null);
+
+                     $.each(response.entities, function (item) {
+                         var linkHtml = "<tr><td>" + this.type + "</td><td>" + this.text + "</td></tr>";
+                         $("#tableEntities > tbody").append(linkHtml);
+
+                         switch (this.type) {
+                             case "FOOD_DISH":
+                                 dish = this.text;
+                                 break;
+
+                             case "LOCAL_COUNTRY":
+                                 _country = this.text;
+                                 break;
+
+                             case "LOCAL_DISTRICT":
+                                 _district = this.text;
+                                 break;
+                             default:
+                         }
+
+                     });
+
+                     if (_district == null) {
+                         _district = "Lima";
+                     }
+
+                     if (_country == null) {
+                         _country = "Perú";
+                     }
+
+                     _queryrequest = `${_queryrequest} ${_district} ${_country}`;
+
+                     $("#pQueryParsed").html(_queryrequest);
+
+
+                     //Run Discovery Service
+                    $.ajax({
+                        url: '@Url.Action("QueryRequest", "Discovery")',
+                        method: 'POST',
+                        data: { environmentid: _environmentid, collectionid: _collectionid, queryrequest: _queryrequest }
+                    }).done(function (response) {
+                        $("#pQueryOutPut").html(renderjson.set_show_to_level(2)(response.obj));
+
+                        $("#pQueryKeyWord").removeClass("hidden");
+
+                        //$("#pQueryKeyWord").text(response.obj.results[0].enriched_text.keywords[0].text + " (relevancia: " + response.obj.results[0].enriched_text.keywords[0].relevance * 100 + "%)");
+                        $("#pQueryKeyWord").html(response.text);
+
+                        $("#queryResults").removeClass("hidden");
+
+                        $("#queryLinks").html(null);
+
+                    }).fail(function (jqXHR, textStatus) {
+                        alert("Error de sistema: " + textStatus);
+                    });
+
+
+
+
+            }).fail(function (jqXHR, textStatus) {
+                alert("Error de sistema: " + textStatus);
+            });
+
+
+
+
+            }); //End btnQuery
+
+            $("#btnGoogle").on("click", function () {
+
+                var apiKey = "AIzaSyCgeMzIPb9LnN92vV8ZbbCWhFS1MtF51n0";
+                var context = "000820817763802558027:eqsc9_3gk2g";
+
+                var _dish;
+                var _district;
+                var _country;
+
+                var query = $("#queryInput").val();
+
+                if (query == "") {
+                    return;
+                }
+
+                if (!$("#pQueryKeyWord").hasClass("hidden")) {
+                    $("#pQueryKeyWord").addClass("hidden");
+                }
+
+                if (!$("#queryResults").hasClass("hidden")) {
+                    $("#queryResults").addClass("hidden");
+                }
+
+                if (!$("#queryLinks").hasClass("hidden")) {
+                    $("#queryLinks").addClass("hidden");
+                }
+
+
+                 //Parse Request with NLU
+                 $.ajax({
+                    url: '@Url.Action("QueryNLUparser", "Discovery")',
+                    method: 'POST',
+                    data: { queryRaw: query }
+                 }).done(function (response) {
+                     $("#queryNLUparse").html(renderjson.set_show_to_level(1)(response));
+                     $("#queryNLUparse").removeClass("hidden");
+
+
+
+                     $.each(response.entities, function (item) {
+                         var linkHtml = "<tr><td>" + this.type + "</td><td>" + this.text + "</td></tr>";
+                         $("#tableEntities > tbody").append(linkHtml);
+
+                         switch (this.type) {
+                             case "FOOD_DISH":
+                                 dish = this.text;
+                                 break;
+
+                             case "LOCAL_COUNTRY":
+                                 _country = this.text;
+                                 break;
+
+                             case "LOCAL_DISTRICT":
+                                 _district = this.text;
+                                 break;
+                             default:
+                         }
+
+                     });
+
+                     if (_district == null) {
+                         _district = "Lima";
+                     }
+
+                     if (_country == null) {
+                         _country = "Perú";
+                     }
+
+                     query = `${query} ${_district} ${_country}`;
+
+                     $("#pQueryParsed").html(query);
+
+
+                     var url = "https://www.googleapis.com/customsearch/v1?key=" + apiKey + "&cx=" + context + "&q=" + query;
+
+                //$("#wait").css("display", "block");
+
+                $.get(url, function (response) {
+                    $("#pQueryOutPut").html(renderjson.set_show_to_level(2)(response));
+
+                    $("#queryResults").removeClass("hidden");
+
+                    $("#queryLinks").html(null);
+
+                    $.each(response.items, function (item) {
+                        var linkHtml = "<a style='margin: .5rem 0' href='" + this.link + "' target='_blank'>" + this.title + "</a>";
+                        $("#queryLinks").append(linkHtml);
+                    });
+
+                    if (response.items.length > 0) {
+                        var button = '<button style="margin:1rem 0;" id="btnLoadDocs" class="btn btn-primary">Cargar Documentos</button>';
+                        $("#queryLinks").append(button);
+                    }
+
+                    $("#queryLinks").removeClass("hidden");
+
+                }).always(function () {
+                    //$("#wait").css("display", "none");
+                });
+
+
+
+            }).fail(function (jqXHR, textStatus) {
+                alert("Error de sistema: " + textStatus);
+            });
+
+
+
+            }); //End btnGoogle
+
+            //Upload Google Custom Search Links to Discover Service
+
+            $('#queryLinks').on('click', '#btnLoadDocs', function () {
+
+                var _list = [];
+
+                $("#queryLinks a").each(function (item) {
+                    var link = $(this).attr('href');
+
+                    _list.push(link);
+                });
+
+                $.ajax({
+                    url: '@Url.Action("AddDocumentList", "Discovery")',
+                    method: 'POST',
+                    data: { list: _list }
+                })
+                    .done(function (obj) {
+                        $("#queryLinks").html(renderjson.set_show_to_level(2)(obj));
+                    })
+                    .fail(function (jqXHR, textStatus) {
+                        alert("Error de sistema: " + textStatus);
+                    });
+
+            });
+
+            $("#jsonDocuments").html(renderjson.set_show_to_level(3)(@Html.Raw(ViewData["Documents"])));
+
+
+            $.ajax({
+                url: '@Url.Action("GetEnvironments", "Discovery")',
+                method: 'POST',
+                dataType: 'json'
+            })
+                .done(function (result) {
+
+                $("#queryEnviromentID").val(result.environments[1].environment_id);
+
+                $('#tblEnviroment').DataTable({
+                    data: result.environments,
+                    columns: [
+                        { data: "environment_id" },
+                        { data: "name" },
+                        //{ data: "description" },
+                        //{ data: "created" },
+                        //{ data: "updated" },
+                        { data: "read_only" }
+                    ]
+                });
+            });
+
+            $.ajax({
+                url: '@Url.Action("GetConfigurations", "Discovery")',
+                method: 'POST',
+                dataType: 'json'
+            })
+            .done(function (result) {
+                $("#queryConfigID").val(result.configurations[0].configuration_id);
+
+                $("#documentConfigID").val(result.configurations[0].configuration_id);
+
+                $('#tblConfigurations').DataTable({
+                    data: result.configurations,
+                    columns: [
+                        { data: "configuration_id" },
+                        { data: "name" }
+                        //{ data: "description" },
+                        //{ data: "created" },
+                        //{ data: "updated" }
+                    ]
+                });
+            });
+
+             $.ajax({
+                url: '@Url.Action("GetCollections", "Discovery")',
+                method: 'POST',
+                dataType: 'json'
+            })
+            .done(function (result) {
+
+                $("#queryCollectionIDRequest").val(result.collections[0].collection_id);
+                $("#documentCollectionID").val(result.collections[0].collection_id);
+
+                $('#tblCollections').DataTable({
+                    data: result.collections,
+                    columns: [
+                        { data: "collection_id" },
+                        { data: "name" },
+                        //{ data: "description" },
+                        //{ data: "created" },
+                        //{ data: "updated" },
+                        { data: "configuration_id" },
+                        { data: "language" }
+                    ]
+                });
+            });
+
+
+             $('#btnSaveDocument').click(function () {
+
+                var _configid = $("#documentConfigID").val();
+                var _collectionid = $("#documentCollectionID").val();
+
+
+                if (_configid == null || _configid == undefined) {
+                    alert("Debe ingresar un Código de Configuración");
+                    return;
+                }
+
+
+                if (_collectionid == null || _collectionid == undefined) {
+                    alert("Debe ingresar un Código de Colección");
+                    return;
+                }
+
+                var request = $.ajax({
+                    url: '@Url.Action("AddDocument", "Discovery")',
+                    method: 'POST',
+                    data: { collectionid: _collectionid, configid: _configid }
+                });
+
+                request.done(function (obj) {
+                    $("#createdDoc").addClass("alert alert-info");
+                    $("#createdDoc").text("Nuevo documento creado. ID: " + obj);
+
+                    $("#queryDocumentID").val(obj);
+                    });
+
+                    request.fail(function (jqXHR, textStatus) {
+                        alert("Error de sistema: " + textStatus);
+                    });
+            });
+
+
+            $('#btnDetailsDocument').click(function () {
+
+                var _documentid = $("#queryDocumentID").val();
+                var _collectionid = $("#documentCollectionID").val();
+
+
+                if (_collectionid == null || _collectionid == undefined || _collectionid == "") {
+                    alert("Debe ingresar un ID de Colección");
+                    return;
+                }
+
+                if (_documentid == null || _documentid == undefined || _documentid == "") {
+                    alert("Debe ingresar un ID de Documento");
+                    return;
+                }
+
+                var request = $.ajax({
+                        url: '@Url.Action("DetailsDocument", "Discovery")',
+                        method: 'POST',
+                        data: { collectionid: _collectionid, documentid: _documentid }
+                });
+
+                request.done(function (obj) {
+                    $("#createdDoc").addClass("alert alert-info");
+                    $("#createdDoc").html(renderjson.set_show_to_level(3)(obj));
+                });
+
+                request.fail(function (jqXHR, textStatus) {
+                    alert("Error de sistema: " + textStatus);
+                });
+            });
+
+
+            $('#btnEliminarDocumentID').click(function () {
+
+                var _documentid = $("#queryDocumentID").val();
+                //var _configid = $("#documentConfigID").val();
+                var _collectionid = $("#documentCollectionID").val();
+
+
+                if (_collectionid == null || _collectionid == undefined || _collectionid == "") {
+                    alert("Debe ingresar un ID de Colección");
+                    return;
+                }
+
+                if (_documentid == null || _documentid == undefined || _documentid == "") {
+                    alert("Debe ingresar un ID de Documento");
+                    return;
+                }
+
+                var request = $.ajax({
+                        url: '@Url.Action("DeleteDocument", "Discovery")',
+                        method: 'POST',
+                        data: { collectionid: _collectionid, documentid: _documentid }
+                });
+
+                request.done(function (obj) {
+                    alert("Se eliminó el Documento: " + obj);
+
+                    });
+
+                    request.fail(function (jqXHR, textStatus) {
+                        alert("Error de sistema: " + textStatus);
+                    });
+            });
+
+
+
+
+            $('#btnCreateConfig').click(function () {
+
+                var _configname = $("#queryCreateConfig").val();
+                var _modelid = $("#queryCreateModel").val();
+
+                if (_configname == null || _configname == undefined || _configname == "") {
+                    alert("Debe ingresar un Nombre Configuración");
+                    return;
+                }
+
+                var request = $.ajax({
+                        url: '@Url.Action("CreateConfiguration", "Discovery")',
+                        method: 'POST',
+                        data: { configname: _configname, modelid: _modelid }
+                });
+
+                request.done(function (obj) {
+                    alert("Se creó la Configuración: " + obj);
+
+                    });
+
+                    request.fail(function (jqXHR, textStatus) {
+                        alert("Error de sistema: " + textStatus);
+                    });
+            });
+
+            $('#btnConfigID').click(function () {
+
+                var _configid = $("#queryConfigID").val();
+
+                if (_configid == null || _configid == undefined || _configid == "") {
+                    alert("Debe ingresar un ID de Configuración");
+                    return;
+                }
+
+                var request = $.ajax({
+                        url: '@Url.Action("GetConfiguration", "Discovery")',
+                        method: 'POST',
+                        data: { configid: _configid }
+                });
+
+                request.done(function (obj) {
+                    $("#pConfigID").addClass("alert alert-warning");
+
+                    $("#pConfigID").html(renderjson.set_show_to_level(2)(obj));
+
+                    //$("#pConfigID").text(obj);
+                    $("#divModelUpdate").show();
+
+                    });
+
+                    request.fail(function (jqXHR, textStatus) {
+                        alert("Error de sistema: " + textStatus);
+                    });
+            });
+
+
+            $('#btnEliminarConfig').click(function () {
+
+                var _configid = $("#queryConfigID").val();
+
+                if (_configid == null || _configid == undefined || _configid == "") {
+                    alert("Debe ingresar un ID de Configuración");
+                    return;
+                }
+
+                var request = $.ajax({
+                        url: '@Url.Action("DeleteConfiguration", "Discovery")',
+                        method: 'POST',
+                        data: { configid: _configid }
+                });
+
+                request.done(function (obj) {
+                    alert("Se eliminó la Configuración: " + obj);
+
+                    });
+
+                    request.fail(function (jqXHR, textStatus) {
+                        alert("Error de sistema: " + textStatus);
+                    });
+            });
+
+
+            $('#btnModelID').click(function () {
+
+                var _configid = $("#queryConfigID").val();
+                var _modelid = $("#queryModelID").val();
+
+                if (_configid == null || _configid == undefined || _configid == "") {
+                    alert("Debe ingresar un ID de Configuración");
+                    return;
+                }
+
+                if (_modelid == null || _modelid == undefined || _modelid == "") {
+                    alert("Debe ingresar un ID de Modelo");
+                    return;
+                }
+
+                var request = $.ajax({
+                        url: '@Url.Action("UpdateConfiguration", "Discovery")',
+                        method: 'POST',
+                        data: { configid: _configid, modelid: _modelid }
+                });
+
+                request.done(function (obj) {
+                    $("#pModelID").addClass("alert alert-danger");
+                    $("#pModelID").text(obj);
+
+                    });
+
+                    request.fail(function (jqXHR, textStatus) {
+                        alert("Error de sistema: " + textStatus);
+                    });
+            });
+
+
+            $('#btnCollectionID').click(function () {
+
+                var _collectionid = $("#queryCollectionID").val();
+
+                if (_collectionid == null || _collectionid == undefined || _collectionid == "") {
+                    alert("Debe ingresar un ID de Colección");
+                    return;
+                }
+
+                var request = $.ajax({
+                        url: '@Url.Action("GetCollection", "Discovery")',
+                        method: 'POST',
+                        data: { collectionid: _collectionid }
+                });
+
+                request.done(function (obj) {
+                    $("#pCollectionID").addClass("alert alert-warning");
+
+                    $("#pCollectionID").html(renderjson.set_show_to_level(2)(obj));
+                    //$("#pCollectionID").text(obj);
+
+                    });
+
+                    request.fail(function (jqXHR, textStatus) {
+                        alert("Error de sistema: " + textStatus);
+                    });
+            });
+
+
+             $('#btnCreateCollection').click(function () {
+
+                 var _collectionname = $("#queryCreateCollectionName").val();
+                 var _configid = $("#queryCreateCollectionConfig").val();
+
+                 if (_collectionname == null || _collectionname == undefined || _collectionname == "") {
+                    alert("Debe ingresar un Nombre de Colección");
+                    return;
+                 }
+
+                 if (_configid == null || _configid == undefined || _configid == "") {
+                     alert("Debe ingresar un ID de Configuración");
+                     return;
+                 }
+
+                var request = $.ajax({
+                        url: '@Url.Action("CreateCollection", "Discovery")',
+                        method: 'POST',
+                        data: { name: _collectionname, configid: _configid }
+                });
+
+                request.done(function (obj) {
+                    alert("Se creó la Colección: " + obj);
+
+                    });
+
+                    request.fail(function (jqXHR, textStatus) {
+                        alert("Error de sistema: " + textStatus);
+                    });
+            });
+
+
+            $('#btnEliminarCollectionID').click(function () {
+
+                var _collectionid = $("#queryCollectionID").val();
+
+                if (_collectionid == null || _collectionid == undefined || _collectionid == "") {
+                    alert("Debe ingresar un ID de Colección");
+                    return;
+                }
+
+                var request = $.ajax({
+                        url: '@Url.Action("DeleteCollection", "Discovery")',
+                        method: 'POST',
+                        data: { collectionid: _collectionid }
+                });
+
+                request.done(function (obj) {
+                    alert("Se eliminó la Colección: " + obj);
+
+                    });
+
+                    request.fail(function (jqXHR, textStatus) {
+                        alert("Error de sistema: " + textStatus);
+                    });
+             });
+
+
+
+        }); //End Init
+
+    </script>
+}

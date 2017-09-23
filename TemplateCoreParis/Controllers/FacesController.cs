@@ -21,17 +21,19 @@ namespace TemplateCoreParis.Controllers
 {
     public class FacesController : Controller
     {
-        private VisualRecognitionService _visualRecognition = new VisualRecognitionService();
-
         private readonly IFaceServiceClient faceServiceClient;
 
         LanguageTranslatorService _languageTranslator = new LanguageTranslatorService();
 
+        #region Visual Recognition parameters
         //FREE Edition - Visual Recognition IT-ORVAL->VCA
+        private VisualRecognitionService _visualRecognition = new VisualRecognitionService();
         private static string _apikey = "1035407f25f1e143bac6598920ddfae8786bec7e";
 
         ////PAID Edition - Visual Recognition-PMP IT-ORVAL->IoT
         //private static string _apikey = "563df392f73e5d7f55af50f37458216fb00ccbc2";
+        #endregion
+
 
 
         public FacesController()
@@ -61,6 +63,17 @@ namespace TemplateCoreParis.Controllers
             return View();
         }
 
+        public IActionResult VisualR()
+        {
+            ViewData["Message"] = "Visual Recognition";
+
+            //https://github.com/watson-developer-cloud/dotnet-standard-sdk/tree/development/src/IBM.WatsonDeveloperCloud.VisualRecognition.v3
+
+            // set the credentials
+            _visualRecognition.SetCredential(_apikey);
+
+            return View();
+        }
 
 
         [HttpPost]

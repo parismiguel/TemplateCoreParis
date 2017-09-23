@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using TemplateCoreParis.Helpers;
 using Newtonsoft.Json;
 using TemplateCoreParis.WebChat;
+using TemplateCoreParis.Models;
 
 namespace TemplateCoreParis.Controllers
 {

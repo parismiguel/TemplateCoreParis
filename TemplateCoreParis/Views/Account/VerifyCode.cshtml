@@ -1,9 +1,9 @@
 ﻿@model VerifyCodeViewModel
 @{
-    ViewData["Title"] = "Verify";
+    ViewData["Title"] = "Verificar";
 }
 
-<h2>@ViewData["Title"].</h2>
+<h2>@ViewData["Title"]</h2>
 
 <form asp-controller="Account" asp-action="VerifyCode" asp-route-returnurl="@Model.ReturnUrl" method="post" class="form-horizontal">
     <div asp-validation-summary="All" class="text-danger"></div>
@@ -28,7 +28,7 @@
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <button type="submit" class="btn btn-default">Submit</button>
+            <button type="submit" class="btn btn-primary">Enviar</button>
         </div>
     </div>
 </form>

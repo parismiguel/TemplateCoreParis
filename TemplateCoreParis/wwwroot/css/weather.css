@@ -1,0 +1,31 @@
+﻿.weather_widget {
+    min-width: 320px;
+    font: 400 14px/1.4 Roboto,Arial,sans-serif
+}
+
+.weather_widget_city_name {
+    font: 600 24px/1.4 Oswald,Arial,sans-serif;
+    display:block !important;
+    font-weight:bold;
+    font-size:large;
+}
+
+h3.weather_widget_temperature {
+    font: 600 30px/1.4 Oswald,Arial,sans-serif;
+    box-shadow:none !important;
+}
+
+.weather_widget_link {
+    color: #d26c22;
+    cursor: pointer
+}
+
+.weather_widget_main:first-letter {
+    text-transform: uppercase
+}
+
+.weather_widget_items td {
+    text-align: left
+}
+
+

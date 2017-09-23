@@ -1,0 +1,43 @@
+﻿@model GoogleAuthenticatorViewModel
+
+
+<h2>@ViewData["Message"]</h2>
+<div>
+    <img src="http://qrcode.kaywa.com/img.php?s=4&d=@(Model.BarcodeUrl)" />
+</div>
+<div>
+    Código manual : @Model.SecretKey
+</div>
+
+
+<form asp-controller="Account" asp-action="GoogleTokenAsync" asp-route-returnurl="@Model.ReturnUrl" method="post" class="form-horizontal">
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <input type="hidden" asp-for="SecretKey" />
+    <input type="hidden" asp-for="BarcodeUrl" />
+
+    <input type="hidden" asp-for="Provider" />
+    <input type="hidden" asp-for="RememberMe" />
+    <input type="hidden" asp-for="ReturnUrl" />
+    <input type="hidden" asp-for="Code" />
+
+    <div class="form-group">
+        <label asp-for="Token" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Token" class="form-control" />
+            <span asp-validation-for="Token" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-success">Validar</button>
+        </div>
+    </div>
+
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

@@ -28,5 +28,16 @@ namespace TemplateCoreParis.Models.ManageViewModels
         [Display(Name = "Cumpleaños")]
         public DateTime? Birthday { get; set; }
 
+        [Required]
+        [Display(Name = "Teléfono")]
+        public string PhoneNumber { get; set; }
+
+        [Required]
+        [Display(Name = "Pregunta Secreta")]
+        public string SecretQuestion { get; set; }
+
+        [Required]
+        [Display(Name = "Respuesta Secreta")]
+        public string SecretResponse { get; set; }
     }
 }

@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace TemplateCoreParis.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

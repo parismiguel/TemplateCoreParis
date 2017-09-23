@@ -1,0 +1,138 @@
+﻿@model IEnumerable<TemplateCoreParis.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Listado de  Usuarios";
+}
+
+@section Styles{
+    <style>
+        .carousel-inner > .item > img {
+            margin: auto;
+            height: 50rem;
+        }
+
+        div.card {
+            border-style: solid;
+            margin: 2rem 0;
+            border-color: lightgray;
+            padding: 1rem;
+        }
+
+        a.btn-block {
+            text-align: left;
+            font-size: x-large;
+            margin: 1rem 0;
+        }
+
+
+        #imgRequest, #myCanvas {
+            height: 30rem;
+            margin-top: 1rem;
+        }
+
+
+        #myPopUp {
+            display: none;
+            padding: 0;
+            background-color: #fff;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            -khtml-border-radius: 5px;
+            border-radius: 5px;
+            -webkit-box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.2);
+            box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.2);
+            behavior: url(/PIE.php); /* CSS3Pie hack for IE6/7/8 */
+            border: 2px solid #BBB;
+            width: 110px;
+            color: #333;
+            font-family: 'FrutigerRegular';
+            position: absolute;
+            top: 180px;
+            left: 250px;
+            z-index: 10002;
+        }
+
+            #myPopUp > ul {
+                padding: 0;
+                margin: 0;
+            }
+
+        #overlay {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            background: #000;
+            opacity: 0.7;
+            filter: alpha(opacity=70);
+        }
+    </style>
+}
+
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    <a asp-action="Create">Crear Nuevo Usuario</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DocIdentity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Birthday)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DocIdentity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @String.Format("{0:dd-MMM-yyyy}", item.Birthday)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+
+                <td>
+                    <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">Ver</a>
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Editar</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Borrar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

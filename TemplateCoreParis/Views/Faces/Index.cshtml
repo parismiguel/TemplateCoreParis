@@ -1,0 +1,251 @@
+﻿
+@{
+    ViewData["Title"] = "Detección de Rostros";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="row">
+    <a class="btn btn-primary btn-block">
+        Detección de Rostros
+    </a>
+
+    <div id="divVR">
+
+        <div class="card">
+
+            <div class="form-group">
+                <label>Grupo de Personas</label>
+                <select id="personGroupId" class="form-control" asp-items="ViewBag.PersonGroups"></select>
+            </div>
+
+            <div class="form-group">
+                <label for="urlVRrequest">URL Imágen</label>
+                <input class="form-control" type="text" id="urlVRrequest" placeholder="Ingrese la URL de la imagen a analizar" value="@ViewData["defaultURL"]" />
+            </div>
+            <div id="errorMessage" style="color:red;"></div>
+
+            @*<button id="btnVRrequest" class="btn btn-success">Analizar</button>*@
+            <button id="btnIdentify" class="btn btn-primary">Identificar</button>
+
+            <img src="#" id="imgRequest" class="hidden" />
+        </div>
+
+    </div>
+
+    <div id="vrMicrosoftResult" style="margin-top:1rem;margin-bottom:1rem;" class="collapse in" aria-expanded="true"></div>
+
+    <div id="vrFaceIdentifyResult" style="margin-top:1rem;margin-bottom:1rem;"></div>
+
+    <div id="myCoord"></div>
+    <div id="myPopUp"></div>
+
+    <canvas id="myCanvas" class="hidden" />
+
+
+</div>
+
+<div id="wait" style="display:none;width:69px;height:89px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;">
+    <img src='~/images/demo_wait.gif' width="64" height="64" /><br>Cargando...
+</div>
+
+@section Scripts {
+
+    <script src="~/lib/renderjson.js"></script>
+
+    <script type="text/javascript">
+
+        var faces;
+        var orgWidth;
+        var orgHeight;
+
+        $(function () {
+
+            $(document).ajaxStart(function () {
+                $("#wait").css("display", "block");
+            });
+            $(document).ajaxComplete(function () {
+                $("#wait").css("display", "none");
+            });
+
+            $('#btnVRrequest').click(function () {
+
+                var _url = $("#urlVRrequest").val();
+                var _personGroupId = $("#personGroupId").val();
+
+                if (_url == null || _url == undefined || _url == "") {
+                    alert("Debe ingresar una URL de imágen");
+                    return;
+                }
+
+                $("#imgRequest").attr("src", _url);
+
+                var cnv = document.getElementById("myCanvas");
+                clearCanvas(cnv);
+
+                $("#vrMicrosoftResult").html(null);
+
+                //Face detection MICROSOFT
+                var microsoft = $.ajax({
+                    url: '@Url.Action("MSFaceDetect", "Faces")',
+                        method: 'POST',
+                        data: { imageUrl: _url }
+                });
+
+                 microsoft.done(function (obj) {
+
+                     $("#myCanvas").removeClass("hidden");
+
+                     $("#vrMicrosoftResult").addClass("alert alert-warning");
+                     $("#vrMicrosoftResult").html(renderjson.set_show_to_level(2)(obj));
+
+                     faces = obj;
+
+                     var canvas = document.getElementById("myCanvas");
+                     var imageObj = document.getElementById("imgRequest");
+
+                     var context = canvas.getContext("2d");
+
+                     orgWidth = imageObj.naturalWidth;
+                     orgHeight = imageObj.height;
+
+                     canvas.width = imageObj.naturalWidth;
+                     canvas.height = imageObj.height;
+                     context.drawImage(imageObj, 0, 0);
+
+
+                     for (var i = 0; i < obj.length; i++) {
+
+                         drawRectangle(obj[i].faceRectangle, context);
+                     }
+
+                    });
+
+                 microsoft.fail(function (jqXHR, textStatus) {
+                        alert("Error de sistema: " + textStatus);
+                 });
+
+            });
+
+
+            // IDENTIFY
+            $("#btnIdentify").on("click", function () {
+                var _url = $("#urlVRrequest").val();
+                var _personGroupId = $("#personGroupId").val();
+
+                if (_url == null || _url == undefined || _url == "") {
+                    alert("Debe ingresar una URL de imágen");
+                    return;
+                }
+
+                $("#imgRequest").attr("src", _url);
+
+                var cnv = document.getElementById("myCanvas");
+                clearCanvas(cnv);
+
+                $("#vrMicrosoftResult").html(null);
+
+                $.ajax({
+                        url: '@Url.Action("MsFaceIdentify", "Faces")',
+                        method: 'POST',
+                        data: { imageUrl: _url, personGroupID: _personGroupId }
+                }).done(function (result) {
+
+                    if (result == null) {
+                        $("#errorMessage").html("No se reconoce la imagen. Verifique el formato y resolución.");
+                        return;
+                    }
+
+                    $("#myCanvas").removeClass("hidden");
+
+                     $("#vrMicrosoftResult").addClass("alert alert-warning");
+                     $("#vrMicrosoftResult").html(renderjson.set_show_to_level(2)(result));
+
+                     faces = result.faces;
+
+                     var canvas = document.getElementById("myCanvas");
+                     var imageObj = document.getElementById("imgRequest");
+
+                     var context = canvas.getContext("2d");
+
+                     orgWidth = imageObj.naturalWidth;
+                     orgHeight = imageObj.height;
+
+                     canvas.width = imageObj.naturalWidth;
+                     canvas.height = imageObj.height;
+                     context.drawImage(imageObj, 0, 0);
+
+
+                     for (var i = 0; i < faces.length; i++) {
+
+                         drawRectangle(faces[i].faceRectangle, context);
+                     }
+
+                    }).fail(function (jqXHR, textStatus) {
+                        alert("Error de sistema: " + textStatus);
+                 });
+
+            });
+
+            $("#myCanvas").on("mousemove", function (e) {
+                var x = e.offsetX;
+                var y = e.offsetY;
+
+                var imageObj = document.getElementById("imgRequest");
+                var canvas = document.getElementById("myCanvas");
+
+                var scale = canvas.clientWidth / orgWidth;
+
+                for (var i = 0; i < faces.length; i++) {
+                    var fr = faces[i].faceRectangle;
+
+                    var left = fr.left * scale;
+                    var top = fr.top * scale;
+                    var width = fr.width * scale;
+                    var height = fr.height * scale;
+
+                    // Display the face description for this face if the mouse is over this face rectangle.
+                    if (x >= left && x <= left + width && y >= top && y <= top + height) {
+                        $("#myPopUp").html("<ul class='list- group'><li class='list-group-item'>Edad: " + faces[i].faceAttributes.age + "</li><li class='list-group-item'>Sexo: " + faces[i].faceAttributes.gender + "</li></ul>");
+                        $("#myPopUp").css({ top: e.pageY, left: e.pageX }).show();
+
+                        break;
+                    }
+
+
+                }
+
+            });
+
+            $('#myCanvas').mouseout(function () {
+                $('#myPopUp').hide();
+            });
+
+
+    }); //End Init
+
+
+    function drawRectangle(coord, context) {
+        context.beginPath();
+        context.rect(coord.left, coord.top, coord.width, coord.height);
+        context.lineWidth = 5;
+        context.strokeStyle = 'purple';
+        context.stroke();
+    }
+
+    function clearCanvas(cnv) {
+        var ctx = cnv.getContext("2d");
+        ctx.save();         // store the current transformation matrix
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, cnv.width, cnv.height);
+        ctx.restore();        // restore the transform
+    }
+
+    </script>
+
+}
+
+
+
+
+

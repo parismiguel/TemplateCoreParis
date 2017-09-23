@@ -383,7 +383,6 @@ namespace TemplateCoreParis.FacebookChat
                     TextTemplate _reniec = await GetReniecInfoAsync(context.DNI, senderId);
 
                     PostJson(_reniec);
-                    PostJson(GetTextFB(senderId, "¿Cúal es el número que deseas migrar?"));
 
                     context.Action = null;
                     context.Validate = true;

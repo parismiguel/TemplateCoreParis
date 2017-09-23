@@ -1,5 +1,9 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@section Styles{
+    <link href="~/css/weather.css" rel="stylesheet" />
 }
 
 <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
@@ -16,7 +20,7 @@
                 <p>
                     Learn how to build ASP.NET apps that can run anywhere.
                     <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525028&clcid=0x409">
-                        Learn More
+                        @Localizer["VerMas"]
                     </a>
                 </p>
             </div>
@@ -27,7 +31,7 @@
                 <p>
                     There are powerful new features in Visual Studio for building modern web apps.
                     <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525030&clcid=0x409">
-                        Learn More
+                        @Localizer["VerMas"]
                     </a>
                 </p>
             </div>
@@ -38,7 +42,7 @@
                 <p>
                     Bring in libraries from NuGet, Bower, and npm, and automate tasks using Grunt or Gulp.
                     <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525029&clcid=0x409">
-                        Learn More
+                        @Localizer["VerMas"]
                     </a>
                 </p>
             </div>
@@ -49,7 +53,7 @@
                 <p>
                     Learn how Microsoft's Azure cloud platform allows you to build, deploy, and scale web apps.
                     <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525027&clcid=0x409">
-                        Learn More
+                        @Localizer["VerMas"]
                     </a>
                 </p>
             </div>
@@ -57,13 +61,15 @@
     </div>
     <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
+        <span class="sr-only">Anterior</span>
     </a>
     <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
+        <span class="sr-only">Siguiente</span>
     </a>
 </div>
+
+<div>@ViewData["Title"]</div>
 
 <div class="row">
     <div class="col-md-3">
@@ -106,3 +112,25 @@
         </ul>
     </div>
 </div>
+
+@await Html.PartialAsync("_ChatBot")
+
+@section Scripts{
+
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    <script src="~/js/chatbot-vca.js"></script>
+
+    <!-- Última versión compilada y minificada -->
+    <script src="https://tecactus-4b42.kxcdn.com/reniec-sunat-js.min.js"></script>
+    <script src="~/js/reniec-vca.js"></script>
+
+    <script>
+        $(function () {
+            sendRequest(true);
+            $("#textInput").focus();
+
+        }); // Init
+
+    </script>
+}

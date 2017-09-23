@@ -10,6 +10,8 @@ using Microsoft.Extensions.Options;
 using TemplateCoreParis.Models;
 using TemplateCoreParis.Models.ManageViewModels;
 using TemplateCoreParis.Services;
+using TemplateCoreParis.WebChat;
+using TemplateCoreParis.Data;
 
 namespace TemplateCoreParis.Controllers
 {
@@ -23,13 +25,16 @@ namespace TemplateCoreParis.Controllers
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
 
+        private readonly ApplicationDbContext _context;
+
         public ManageController(
           UserManager<ApplicationUser> userManager,
           SignInManager<ApplicationUser> signInManager,
           IOptions<IdentityCookieOptions> identityCookieOptions,
           IEmailSender emailSender,
           ISmsSender smsSender,
-          ILoggerFactory loggerFactory)
+          ILoggerFactory loggerFactory,
+           ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -37,6 +42,7 @@ namespace TemplateCoreParis.Controllers
             _emailSender = emailSender;
             _smsSender = smsSender;
             _logger = loggerFactory.CreateLogger<ManageController>();
+            _context = context;
         }
 
         //
@@ -391,6 +397,75 @@ namespace TemplateCoreParis.Controllers
 
             return RedirectToAction(nameof(ManageLogins), new { Message = message });
         }
+
+
+        //
+        // GET: /Manage/Edit
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Edit()
+        {
+            var user = await GetCurrentUserAsync();
+
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, "Intento de ingreso inválido");
+
+                return View(nameof(Index));
+            }
+
+            var _decrypt = Helpers.Helpers.DecryptString(user.SecretResponse, ChatBotController._keyEncode);
+
+            EditUserViewModel model = new EditUserViewModel()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Birthday = user.Birthday,
+                DocIdentity = user.DocIdentity,
+                Title = user.Title,
+                PhoneNumber = user.PhoneNumber,
+                SecretQuestion = user.SecretQuestion,
+                SecretResponse = _decrypt
+            };
+
+
+            return View(model);
+        }
+
+
+        //
+        // POST: /Account/Register
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditUserViewModel model)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByIdAsync(model.Id);
+                var _encrypt = Helpers.Helpers.EncryptString(model.SecretResponse, ChatBotController._keyEncode);
+
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.Birthday = model.Birthday;
+                user.DocIdentity = model.DocIdentity;
+                user.Title = model.Title;
+                user.PhoneNumber = model.PhoneNumber;
+                user.SecretQuestion = model.SecretQuestion;
+                user.SecretResponse = _encrypt;
+
+                //add user to the datacontext (database) and save changes
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Index", "Manage");
+            }
+
+            return View(model);
+        }
+
 
         #region Helpers
 

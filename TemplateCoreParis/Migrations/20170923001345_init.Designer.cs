@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using TemplateCoreParis.Data;
 
-namespace TemplateCoreParis.Data.Migrations
+namespace TemplateCoreParis.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170922211043_init")]
+    [Migration("20170923001345_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -182,6 +182,10 @@ namespace TemplateCoreParis.Data.Migrations
                     b.Property<string>("PhoneNumber");
 
                     b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("SecretQuestion");
+
+                    b.Property<string>("SecretResponse");
 
                     b.Property<string>("SecurityStamp");
 

@@ -32,12 +32,23 @@ $(function () {
 
         appendImage(true, fileURL);
 
+        var fileReader = new FileReader();
+        fileReader.onloadend = function (e) {
+            var arrayBuffer = e.target.result;
+            var byteArray = new Uint8Array(arrayBuffer);
+            sendImage(byteArray);
+
+        };
+        fileReader.readAsArrayBuffer(file);
+
         //console.log('here is a link', fileURL);
 
 
         //var fileReader = new FileReader();
+        //var arrayBuffer;
+
         //fileReader.onloadend = function (e) {
-        //    var arrayBuffer = e.target.result;
+        //    arrayBuffer = e.target.result;
         //    var fileType = "image/png";
         //    blobUtil.arrayBufferToBlob(arrayBuffer, fileType).then(function (blob) {
         //        console.log('here is a blob', blob);
@@ -51,6 +62,10 @@ $(function () {
         //    }).catch(console.log.bind(console));
         //};
         //fileReader.readAsArrayBuffer(file);
+
+        //var byteArray = new Uint8Array(arrayBuffer);
+
+        //sendImage(byteArray);
 
     })
 
@@ -203,6 +218,42 @@ function sendRequest(init, _action, _isPayload) {
         });
 
 }
+
+function sendImage(_imgBytes) {
+    var url = "/Faces/MsFaceIdentifyJson/";
+
+    $.post(url, { imgBytes: _imgBytes}, function (result) {
+        var obj = JSON.parse(result)
+
+         appendMessage(false, obj.text);
+
+        $("#countChats").text(1);
+
+    })
+        .done(function () {
+
+        })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            var _errorMsg;
+
+            switch (jqXHR.status) {
+                case 500:
+                    _errorMsg = "Error en el servidor. " + errorThrown;
+                    break;
+                case 404:
+                    _errorMsg = "No se ha encontrado el recurso";
+                    break;
+                default:
+                    _errorMsg = "Error de conexión a Internet";
+                    break;
+            }
+
+            NotificationToast("error", _errorMsg, "Error");
+        });
+
+}
+
+
 
 function resetInputChat() {
     $("#textInput").prop("disabled", false);

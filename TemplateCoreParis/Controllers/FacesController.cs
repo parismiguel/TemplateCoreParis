@@ -333,6 +333,11 @@ namespace TemplateCoreParis.Controllers
         {
             string _text = string.Empty;
 
+            if (imgBytes == null)
+            {
+                return Json(null);
+            }
+
             try
             {
                 var personGroupID = "35f912b2-fa73-40bf-aa47-5fcc5ba28d8a";

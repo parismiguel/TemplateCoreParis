@@ -5,6 +5,9 @@
 }
 
 $(function () {
+    sendRequest(true);
+
+    $("#textInput").focus();
 
     $('.active-notification').on('click', function () {
         var msg = $(this).text();

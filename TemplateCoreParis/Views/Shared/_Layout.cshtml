@@ -119,6 +119,12 @@
         </footer>
     </div>
 
+    @await Html.PartialAsync("_ChatBot")
+
+    <a href="#" class="back-to-top" style="display: inline;">
+        <i class="fa fa-chevron-up"></i>
+    </a>
+
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
@@ -149,6 +155,18 @@
 
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
+
+    <script src="~/js/chatbot-vca.js"></script>
+
+    <!-- Última versión compilada y minificada -->
+    <script src="https://tecactus-4b42.kxcdn.com/reniec-sunat-js.min.js"></script>
+    <script src="~/js/reniec-vca.js"></script>
+
+
+    <script src="~/js/record/recorder.js"></script>
+    <script src="~/js/record/main.js"></script>
+
+    <script src="//wzrd.in/standalone/blob-util@latest"></script>
 
     @RenderSection("Scripts", required: false)
 </body>

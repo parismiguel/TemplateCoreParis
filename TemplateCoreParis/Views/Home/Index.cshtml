@@ -113,24 +113,13 @@
     </div>
 </div>
 
-@await Html.PartialAsync("_ChatBot")
 
 @section Scripts{
 
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 
-    <script src="~/js/chatbot-vca.js"></script>
-
-    <!-- Última versión compilada y minificada -->
-    <script src="https://tecactus-4b42.kxcdn.com/reniec-sunat-js.min.js"></script>
-    <script src="~/js/reniec-vca.js"></script>
 
     <script>
-        $(function () {
-            sendRequest(true);
-            $("#textInput").focus();
-
-        }); // Init
 
     </script>
 }

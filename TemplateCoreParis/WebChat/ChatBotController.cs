@@ -225,6 +225,16 @@ namespace TemplateCoreParis.WebChat
                     }
                 }
 
+                //Testing purposes
+                switch (msg)
+                {
+                    case "productos":
+                        _attachment = CarouselConstructor(GetCarouselList());
+                        break;
+                    default:
+                        break;
+                }
+
 
                 context = result.Context;
 

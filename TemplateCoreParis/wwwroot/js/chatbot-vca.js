@@ -12,9 +12,49 @@ $(function () {
         $("#countChats").text(0);
     });
 
+    $("#iconPicture").click(function () {
+        $("#myImage").trigger('click');
+    });
+
+    $('#myImage').on('change', function () {
+        var val = $(this).val();
+        $(this).siblings('span').text(val);
+
+        //var img = new Image();
+        //img.load(val);
+        //document.getElementById("#scrollingChat").appendChild(img);
+        //$("#scrollingChat").append(element);
+
+
+        var file = $('#myImage')[0].files[0];
+
+        var fileURL = URL.createObjectURL(file);
+
+        appendImage(true, fileURL);
+
+        //console.log('here is a link', fileURL);
+
+
+        //var fileReader = new FileReader();
+        //fileReader.onloadend = function (e) {
+        //    var arrayBuffer = e.target.result;
+        //    var fileType = "image/png";
+        //    blobUtil.arrayBufferToBlob(arrayBuffer, fileType).then(function (blob) {
+        //        console.log('here is a blob', blob);
+        //        console.log('its size is', blob.size);
+        //        console.log('its type is', blob.type);
+
+        //        objectURL = URL.createObjectURL(blob);
+
+        //        console.log('here is a link', objectURL);
+
+        //    }).catch(console.log.bind(console));
+        //};
+        //fileReader.readAsArrayBuffer(file);
+
+    })
+
 }); // Init
-
-
 
 function sendRequest(init, _action, _isPayload) {
     var url = "/Api/ChatBot/";
@@ -175,16 +215,38 @@ function resetInputChat() {
 
 
 function resetChat() {
-    _contextAction = "";
-    _password = "";
-    _userName = "";
 
-    $("#scrollingChat").text(null);
-    sendRequest(true, null, false);
+    swal({
+        title: "Está seguro?",
+        text: "Desea eliminar el historial de su conversación?",
+        type: "info",
+        showCancelButton: true,
+        confirmButtonText: "Aceptar",
+        cancelButtonText: "Cancelar",
+        closeOnConfirm: true,
+        closeOnCancel: true
+    }, function (isConfirm) {
+        if (isConfirm === true) {
+
+            localStorage.removeItem("myPayload");
+            localStorage.removeItem("myResponse");
+
+            _contextAction = "";
+            _password = "";
+            _userName = "";
+
+            $("#scrollingChat").text(null);
+
+            sendRequest(true, null, false);
+        }
+        else {
+            return false;
+        }
+    });
 }
 
 function appendMessage(isUser, message) {
-    var nombre = "AjeBot";
+    var nombre = "VCAbot";
     var clase = "direct-chat-msg";
     var imagen = "/images/user1-128x128.jpg";
     var alig1 = "left";
@@ -221,6 +283,47 @@ function appendMessage(isUser, message) {
     $("#bodyChat").scrollTop($("#scrollingChat")[0].scrollHeight);
 
 }
+
+function appendImage(isUser, url) {
+    var nombre = "VCAbot";
+    var clase = "direct-chat-msg";
+    var imagen = "/images/user1-128x128.jpg";
+    var alig1 = "left";
+    var alig2 = "right";
+
+    if (isUser) {
+        if (_userName !== null && _userName !== undefined) {
+            nombre = _userName;
+        }
+        else {
+            nombre = "Usuario";
+        }
+
+        clase = "direct-chat-msg right";
+        imagen = "/images/user3-128x128.jpg";
+        alig1 = "right";
+        alig2 = "left";
+    }
+
+    var hora = currentTime();
+
+    var element = "<div class='" + clase + "'>" +
+        "<div class='direct-chat-info clearfix'>" +
+        "<span class='direct-chat-name pull-" + alig1 + "'>" + nombre + "</span>" +
+        "<span class='direct-chat-timestamp pull-" + alig2 + "'>" + hora + "</span>" +
+        "</div>" +
+        "<img class='direct-chat-img' src='" + imagen + "' alt= '" + nombre + "'>" +
+        "<div class='direct-chat-text' style='text-align:center;'>" +
+        "<img class='responsive' src='" + url + "' alt='Imágen' style='height:20rem;'>" +
+        "</div>" +
+        "</div>"
+
+    $("#scrollingChat").append(element);
+
+    $("#bodyChat").scrollTop($("#scrollingChat")[0].scrollHeight);
+
+}
+
 
 function getGoogleUserInfo(_myUserEmail) {
 

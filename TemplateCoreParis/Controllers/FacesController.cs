@@ -1,21 +1,16 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.ProjectOxford.Face;
+using Microsoft.ProjectOxford.Face.Contract;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.ProjectOxford.Face;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
-using IBM.WatsonDeveloperCloud.LanguageTranslator.v2;
 using System.IO;
-using System.Text;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using Microsoft.ProjectOxford.Face.Contract;
-using IBM.WatsonDeveloperCloud.VisualRecognition.v3.Model;
-using TemplateCoreParis.FacebookChat;
-using IBM.WatsonDeveloperCloud.LanguageTranslator.v2.Model;
-using TemplateCoreParis.FacebookChat.TemplatesFB.TextFB;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace TemplateCoreParis.Controllers
 {
@@ -98,78 +93,9 @@ namespace TemplateCoreParis.Controllers
             return Json(null);
         }
 
-
-        [HttpPost]
-        public async Task<IActionResult> MSFaceDetectBytes(byte[] imgBytes, string senderID)
-        {
-            string _text = string.Empty;
-
-            try
-            {
-                using (var stream = new MemoryStream(imgBytes))
-                {
-                    var faces = await faceServiceClient.DetectAsync(stream, true, false,
-                        new FaceAttributeType[] {
-                        FaceAttributeType.Gender,
-                        FaceAttributeType.Age,
-                        FaceAttributeType.Smile,
-                        FaceAttributeType.Glasses,
-                        FaceAttributeType.FacialHair,
-                        FaceAttributeType.HeadPose,
-                        FaceAttributeType.Emotion,
-                        FaceAttributeType.Hair,
-                        FaceAttributeType.Makeup,
-                        FaceAttributeType.Occlusion,
-                        FaceAttributeType.Accessories,
-                        FaceAttributeType.Blur,
-                        FaceAttributeType.Exposure,
-                        FaceAttributeType.Noise
-                        });
-
-
-                    if (faces != null)
-                    {
-                        Dictionary<string, double> _emotionsList = new Dictionary<string, double>();
-                        var data = faces[0].FaceAttributes.Emotion;
-
-                        _emotionsList.Add("enojado", data.Anger);
-                        _emotionsList.Add("con desprecio", data.Contempt);
-                        _emotionsList.Add("indignado", data.Disgust);
-                        _emotionsList.Add("con miedo", data.Fear);
-                        _emotionsList.Add("feliz", data.Happiness);
-                        _emotionsList.Add("indiferente", data.Neutral);
-                        _emotionsList.Add("triste", data.Sadness);
-                        _emotionsList.Add("sorprendido", data.Surprise);
-
-                        var _emotionTop = _emotionsList.OrderByDescending(x => x.Value).FirstOrDefault().Key;
-
-                        _text = string.Format("Te noto {0}", _emotionTop);
-                    }
-                    else
-                    {
-                        _text = "No se logra detectar un rostro";
-                    }
-
-
-                }
-
-            }
-            catch (Exception ex)
-            {
-
-                Console.WriteLine(ex.Message);
-            }
-
-
-            return Json(_text);
-
-        }
-
-
         [HttpPost]
         public async Task<IActionResult> MsFaceIdentify(string imageUrl, string personGroupID)
         {
-
             try
             {
                 if (string.IsNullOrEmpty(personGroupID))
@@ -230,116 +156,26 @@ namespace TemplateCoreParis.Controllers
             return Json(null);
         }
 
-
         [HttpPost]
-        public async Task<IActionResult> MsFaceIdentifyArray(byte[] imgBytes, string senderID)
+        public async Task<IActionResult> MsFaceIdentifyJson(IFormFile file)
         {
             string _text = string.Empty;
 
-            try
-            {
-                var personGroupID = "35f912b2-fa73-40bf-aa47-5fcc5ba28d8a";
-
-                using (var stream = new MemoryStream(imgBytes))
-                {
-                    Face[] _faces = await faceServiceClient.DetectAsync(stream, true, false,
-                        new FaceAttributeType[] {
-                            FaceAttributeType.Gender,
-                            FaceAttributeType.Age,
-                            FaceAttributeType.Smile,
-                            FaceAttributeType.Glasses,
-                            FaceAttributeType.FacialHair,
-                            FaceAttributeType.HeadPose,
-                            FaceAttributeType.Emotion,
-                            FaceAttributeType.Hair,
-                            FaceAttributeType.Makeup,
-                            FaceAttributeType.Occlusion,
-                            FaceAttributeType.Accessories,
-                            FaceAttributeType.Blur,
-                            FaceAttributeType.Exposure,
-                            FaceAttributeType.Noise
-                        });
-
-                    if (_faces != null)
-                    {
-                        Dictionary<string, double> _emotionsList = new Dictionary<string, double>();
-                        var data = _faces[0].FaceAttributes.Emotion;
-
-                        _emotionsList.Add("enojado", data.Anger);
-                        _emotionsList.Add("con desprecio", data.Contempt);
-                        _emotionsList.Add("indignado", data.Disgust);
-                        _emotionsList.Add("con miedo", data.Fear);
-                        _emotionsList.Add("feliz", data.Happiness);
-                        _emotionsList.Add("indiferente", data.Neutral);
-                        _emotionsList.Add("triste", data.Sadness);
-                        _emotionsList.Add("sorprendido", data.Surprise);
-
-                        var _emotionTop = _emotionsList.OrderByDescending(x => x.Value).FirstOrDefault().Key;
-
-                        _text = string.Format("Te noto {0}", _emotionTop);
-                    }
-                    else
-                    {
-                        _text = "No se logra detectar un rostro";
-                    }
-
-
-                    var facesIds = _faces.Select(x => x.FaceId).ToArray();
-
-                    var _identify = await faceServiceClient.IdentifyAsync(personGroupID, facesIds);
-
-                    Person _person = new Person();
-
-                    if (_identify[0].Candidates.Count() > 0)
-                    {
-                        string personID = _identify[0].Candidates.OrderByDescending(x => x.Confidence).FirstOrDefault().PersonId.ToString();
-
-                        _person = await faceServiceClient.GetPersonAsync(personGroupID, new Guid(personID));
-
-                        _text = string.Format("Hola {0}. ", _person.Name) + _text;
-
-
-                        return Json(_text);
-
-
-                    }
-
-                    return Json(_text);
-
-                }
-
-
-            }
-            catch (FaceAPIException ex)
-            {
-                Console.WriteLine(ex.ErrorMessage);
-
-                return Json(_text);
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-
-                return Json(_text);
-
-            }
-
-        }
-
-
-        [HttpPost]
-        public async Task<IActionResult> MsFaceIdentifyJson(byte[] imgBytes, string senderID)
-        {
-            string _text = string.Empty;
-
-            if (imgBytes == null)
+            if (file == null)
             {
                 return Json(null);
             }
 
             try
             {
+                byte[] imgBytes = null;
+
+                using (var ms = new MemoryStream())
+                {
+                    file.CopyTo(ms);
+                    imgBytes = ms.ToArray();
+                }
+
                 var personGroupID = "35f912b2-fa73-40bf-aa47-5fcc5ba28d8a";
 
                 using (var stream = new MemoryStream(imgBytes))
@@ -404,8 +240,6 @@ namespace TemplateCoreParis.Controllers
 
 
                     }
-
-                    //return Json(_text);
                     return Json(new { text = _text, identify = _identify, faces = _faces });
 
                 }
@@ -415,16 +249,15 @@ namespace TemplateCoreParis.Controllers
             catch (FaceAPIException ex)
             {
                 Console.WriteLine(ex.ErrorMessage);
-
+                return Json(new { text = ex.ErrorMessage });
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-
+                return Json(new { text = e.Message });
 
             }
 
-            return Json(null);
         }
 
 

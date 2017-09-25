@@ -20,32 +20,30 @@ $(function () {
         var val = $(this).val();
         $(this).siblings('span').text(val);
 
-        //var img = new Image();
-        //img.load(val);
-        //document.getElementById("#scrollingChat").appendChild(img);
-        //$("#scrollingChat").append(element);
-
-
         var file = $('#myImage')[0].files[0];
-
         var fileURL = URL.createObjectURL(file);
 
         appendImage(true, fileURL);
+        sendImage(file);
 
-        var fileReader = new FileReader();
-        fileReader.onloadend = function (e) {
-            var arrayBuffer = e.target.result;
-            var byteArray = new Uint8Array(arrayBuffer);
-            sendImage(byteArray);
+        //var fileReader = new FileReader();
+        //fileReader.onloadend = function (e) {
+        //    var arrayBuffer = e.target.result;
+        //    var byteArray = new Uint8Array(arrayBuffer);
 
-        };
-        fileReader.readAsArrayBuffer(file);
+        //    var myString = Decodeuint8arr(byteArray);
+
+        //    sendImage(myString);
+
+        //};
+        //fileReader.readAsArrayBuffer(file);
+        ////fileReader.readAsText(file);
 
         //console.log('here is a link', fileURL);
 
 
         //var fileReader = new FileReader();
-        //var arrayBuffer;
+        ////var arrayBuffer;
 
         //fileReader.onloadend = function (e) {
         //    arrayBuffer = e.target.result;
@@ -56,6 +54,8 @@ $(function () {
         //        console.log('its type is', blob.type);
 
         //        objectURL = URL.createObjectURL(blob);
+
+        //        sendImage(file);
 
         //        console.log('here is a link', objectURL);
 
@@ -219,20 +219,27 @@ function sendRequest(init, _action, _isPayload) {
 
 }
 
-function sendImage(_imgBytes) {
+function sendImage(_file) {
     var url = "/Faces/MsFaceIdentifyJson/";
 
-    $.post(url, { imgBytes: _imgBytes}, function (result) {
-        var obj = JSON.parse(result)
+    var data = new FormData();
+    data.append('file', _file);
 
-         appendMessage(false, obj.text);
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: data,
+        processData: false,
+        contentType: false
+    })
+        .done(function (result) {
+        //var obj = JSON.parse(result);
+
+        appendMessage(false, result.text);
 
         $("#countChats").text(1);
 
     })
-        .done(function () {
-
-        })
         .fail(function (jqXHR, textStatus, errorThrown) {
             var _errorMsg;
 
@@ -365,7 +372,7 @@ function appendImage(isUser, url) {
         "</div>" +
         "<img class='direct-chat-img' src='" + imagen + "' alt= '" + nombre + "'>" +
         "<div class='direct-chat-text' style='text-align:center;'>" +
-        "<img class='responsive' src='" + url + "' alt='Imágen' style='height:20rem;'>" +
+        "<img class='responsive' src='" + url + "' alt='Imágen' style='height:17rem;'>" +
         "</div>" +
         "</div>"
 
@@ -423,3 +430,4 @@ function getGoogleTokens(_myUserEmail) {
         });
 
 }
+

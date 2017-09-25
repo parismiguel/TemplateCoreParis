@@ -3,8 +3,24 @@
     bottom: 0;
     z-index: 999;
     width: 340px;
-
     right: 0;
+}
+
+#chatbot .fa-2 {
+    margin: .5rem 1rem .5rem .5rem;
+}
+
+#chatbot .fa-2 {
+    font-size: 2em;
+}
+
+.elementPicture {
+    display: inline-flex;
+    align-items: center;
+}
+
+#iconPicture:hover, #iconMic:hover {
+    opacity: 0.6;
 }
 
 
@@ -81,20 +97,45 @@ a.chatButton {
 }
 
 div.chatCarousel {
-    width: 21rem !important;
+    /*width: 21rem !important;*/
+    width: 100%;
     height: 18rem;
+}
+
+div.chatCarousel div.carousel-caption {
+    bottom: 0;
+    padding-top: 0;
+    color:darkslategray;
+}
+
+@media screen and (min-width: 768px) {
+    div.chatCarousel div.carousel-caption {
+        right: 0;
+        left: 0;
+        padding-bottom: 0;
+        top:0;
+        height:100%;
+    }
+}
+
+div.chatCarousel div.carousel-caption a.btn {
+    text-shadow: none;
+    bottom: 0;
+    position: absolute;
+    left: 33%;
 }
 
 div.chatCarousel ol.carousel-indicators {
     bottom: -0.5rem;
 }
 
-div.chatCarousel ol.carousel-indicators .active {
-    background-color: dimgrey;
-}
+    div.chatCarousel ol.carousel-indicators .active {
+        background-color: dimgrey;
+    }
 
 div.chatCarousel > div.carousel-inner > .item > img {
     height: 18rem;
+    width: 100%;
 }
 
 @media screen and (max-width: 767px) {
@@ -131,7 +172,7 @@ input[type=text], input[type=email], input[type=date], input[type=password], inp
 
 
 
-    .fixed-action-btn-chat {
+.fixed-action-btn-chat {
     position: fixed;
     right: 23px;
     bottom: 23px;
@@ -165,27 +206,27 @@ input[type=text], input[type=email], input[type=date], input[type=password], inp
     position: relative;
 }
 
-.box-header.with-border {
-    border-bottom: 1px solid #f4f4f4;
-}
+    .box-header.with-border {
+        border-bottom: 1px solid #f4f4f4;
+    }
 
-.box-header > .fa, .box-header > .glyphicon, .box-header > .ion, .box-header .box-title {
-    display: inline-block;
-    font-size: 18px;
-    margin: 0;
-    line-height: 1;
-}
+    .box-header > .fa, .box-header > .glyphicon, .box-header > .ion, .box-header .box-title {
+        display: inline-block;
+        font-size: 18px;
+        margin: 0;
+        line-height: 1;
+    }
 
-.box-header > .box-tools {
-    position: absolute;
-    right: 10px;
-    top: 5px;
-}
+    .box-header > .box-tools {
+        position: absolute;
+        right: 10px;
+        top: 5px;
+    }
 
 
-.box-header > .box-tools [data-toggle="tooltip"] {
-    position: relative;
-}
+        .box-header > .box-tools [data-toggle="tooltip"] {
+            position: relative;
+        }
 
 .bg-light-blue, .label-primary, .modal-primary .modal-body {
     background-color: #3c8dbc !important;
@@ -240,14 +281,14 @@ input[type=text], input[type=email], input[type=date], input[type=password], inp
     border-image-repeat: initial;
 }
 
-.btn-box-tool:active, .btn-box-tool:focus {
-    box-shadow: none;
-}
+    .btn-box-tool:active, .btn-box-tool:focus {
+        box-shadow: none;
+    }
 
-.open .btn-box-tool, .btn-box-tool:hover {
-    color: #606c84;
-    box-shadow:none;
-}
+    .open .btn-box-tool, .btn-box-tool:hover {
+        color: #606c84;
+        box-shadow: none;
+    }
 
 .box-header:after, .box-body:after, .box-footer:after {
     clear: both;
@@ -288,10 +329,10 @@ input[type=text], input[type=email], input[type=date], input[type=password], inp
     display: block;
 }
 
-.direct-chat-msg:before, .direct-chat-msg:after {
-    content: " ";
-    display: table;
-}
+    .direct-chat-msg:before, .direct-chat-msg:after {
+        content: " ";
+        display: table;
+    }
 
 .direct-chat-info {
     display: block;
@@ -357,13 +398,12 @@ input[type=text], input[type=email], input[type=date], input[type=password], inp
     margin-left: 0;
 }
 
-.right .direct-chat-text:after, .right .direct-chat-text:before {
-    right: auto;
-    left: 100%;
-    border-right-color: transparent;
-    border-left-color: #d2d6de;
-
-}
+    .right .direct-chat-text:after, .right .direct-chat-text:before {
+        right: auto;
+        left: 100%;
+        border-right-color: transparent;
+        border-left-color: #d2d6de;
+    }
 
 .direct-chat-primary .right > .direct-chat-text:after, .direct-chat-primary .right > .direct-chat-text:before {
     border-left-color: #3c8dbc;
@@ -382,10 +422,10 @@ input[type=text], input[type=email], input[type=date], input[type=password], inp
     position: relative;
 }
 
-.box-header:before, .box-body:before, .box-footer:before, .box-header:after, .box-body:after, .box-footer:after {
-    content: " ";
-    display: table;
-}
+    .box-header:before, .box-body:before, .box-footer:before, .box-header:after, .box-body:after, .box-footer:after {
+        content: " ";
+        display: table;
+    }
 
 .input-group {
     position: relative;
@@ -435,3 +475,152 @@ input[type=text], input[type=email], input[type=date], input[type=password], inp
     padding: 11px;
 }
 
+
+
+/*Inherited styles*/
+
+.tooltip-dialog-btn, .suggestion-btn {
+    font-family: "Helvetica Neue for IBM Medium", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    /*font-size: 0.875rem;*/
+    border: 0.125rem solid #01A88F;
+    border-radius: 2.5rem;
+    color: #01A88F;
+    background-color: transparent;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.tooltip-dialog-btn {
+    /*padding: 0.625rem 1.5625rem;*/
+    outline: none;
+}
+
+
+#sidebar.is-active {
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    transform: translateX(0);
+}
+
+#sidebar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: calc(100% - 5.5rem);
+    width: 100%;
+    /* visibility: hidden; */
+    -webkit-transform: translateX(100%);
+    -moz-transform: translateX(100%);
+    -ms-transform: translateX(100%);
+    transform: translateX(100%);
+    background: #23292A;
+    overflow-y: auto;
+    -webkit-transition: -webkit-transform 0.5s ease-out;
+    -moz-transition: -moz-transform 0.5s ease-out;
+    -ms-transition: -ms-transform 0.5s ease-out;
+    transition: transform 0.5s ease-out;
+    z-index: 950;
+}
+
+    #sidebar .close-div {
+        float: right;
+        padding-top: 0.9375rem;
+        padding-right: 0.9375rem;
+    }
+
+.close {
+    /*padding: 0.625rem;*/
+    cursor: pointer;
+    width: 1.875rem;
+    margin-top: 1rem;
+    outline: none;
+}
+
+#sidebar p {
+    padding: 2.5rem 1.25rem 1.5625rem 2.5rem;
+    /*font-size: 1rem;*/
+    margin-bottom: 0;
+    color: white;
+    font-family: "Helvetica Neue for IBM Medium", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.pre-bar::before {
+    border-left: solid 0.25rem #9E4CE6;
+    border-radius: 0.25rem;
+    content: "";
+    margin-right: 0.4375rem;
+    margin-left: -0.625rem;
+}
+
+#sidebar ul {
+    list-style: none;
+    padding: 0 0 0 2.5rem;
+    margin: 0;
+}
+
+    #sidebar ul li {
+        border-top: none;
+        padding: 0 0 0.75rem 0;
+        display: block;
+    }
+
+
+#sidebar .suggestion-btn {
+    background-color: transparent;
+    border: 0.125rem solid #01A88F;
+    /*border: 0.125rem solid #102043;*/
+    border-radius: 1.75rem;
+    font-family: "Helvetica Neue for IBM Medium", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    /*font-size: 0.875rem;*/
+    color: #01A88F;
+    /*color: white;*/
+    /*padding: 0.625rem 1.25rem;*/
+    cursor: pointer;
+    z-index: 950;
+}
+
+#help {
+    /*padding: 0.75rem 1.5625rem;*/
+    background: #102043;
+    color: white;
+    border: none;
+    padding: .2rem 1rem;
+    /*margin: .5rem;*/
+    /*position: absolute;*/
+    right: 1.25rem;
+    /*top: 1.25rem;*/
+}
+
+#resetChat {
+    /*margin: .5rem;*/
+    /*font-size: 0.875rem;*/
+}
+
+
+    #resetChat button.dropdown-toggle {
+        font-family: "Helvetica Neue for IBM Medium", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        /*font-size: 0.875rem;*/
+        background: #bd0000;
+        color: white;
+        border: none;
+        padding: .2rem 1rem;
+        border-radius: 2.5rem;
+    }
+
+    #resetChat a.dropdown-item {
+        margin-left: .5rem;
+        font-size: small;
+        display: list-item;
+    }
+
+        #resetChat a.dropdown-item:hover {
+            background-color: aliceblue;
+        }
+
+.dropdown-divider {
+    height: 1px;
+    margin: .5rem 0;
+    overflow: hidden;
+    background-color: #eceeef;
+}

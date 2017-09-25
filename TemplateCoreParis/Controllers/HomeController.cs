@@ -21,12 +21,12 @@ namespace TemplateCoreParis.Controllers
         private readonly IStringLocalizer<HomeController> _localizer;
         public static IHostingEnvironment _wwwRoot;
 
-        //IT-ORVAL=>Test-aje-jg->Aje group Paris
+        //Org:IT-ORVAL=>Space:VCA=>Conversation-vca->VCA Chatbot
         private WatsonCredentials _credentials = new WatsonCredentials()
         {
-            workspaceID = "ac6889fe-7f09-4f71-ac0e-4d8850b72d2f",
-            username = "7ecc7e1d-b7a9-472b-9419-a7254411cdd5",
-            password = "HQJwcbFZclYL"
+            workspaceID = "af012d44-256c-43ef-abfc-60938316552c",
+            username = "07ca2289-7747-47de-a5e2-8d2b84b02893",
+            password = "4hTOaJ6T2Us4"
         };
 
         public HomeController(IHostingEnvironment environment,
@@ -47,12 +47,13 @@ namespace TemplateCoreParis.Controllers
 
             if (culture == "en")
             {
-                //IT-ORVAL=>Test-aje-jg->Aje group Paris ENGLISH
-                _credentials.workspaceID = "f4462a3c-709b-4dbb-993c-7dc4d59b5f4d";
+                //Org:IT-ORVAL=>Space:VCA=>Conversation-vca->VCA Chatbot
+                _credentials.workspaceID = "af012d44-256c-43ef-abfc-60938316552c";
             }
             else
             {
-                _credentials.workspaceID = "ac6889fe-7f09-4f71-ac0e-4d8850b72d2f";
+                //Org:IT-ORVAL=>Space:VCA=>Conversation-vca->VCA Chatbot
+                _credentials.workspaceID = "af012d44-256c-43ef-abfc-60938316552c";
             }
 
             HttpContext.Session.SetObjectAsJson("Watson", _credentials);
@@ -76,11 +77,11 @@ namespace TemplateCoreParis.Controllers
             {
                 if (cookie == "c=en|uic=en")
                 {
-                    _credentials.workspaceID = "f4462a3c-709b-4dbb-993c-7dc4d59b5f4d";
+                    _credentials.workspaceID = "af012d44-256c-43ef-abfc-60938316552c";
                 }
                 else
                 {
-                    _credentials.workspaceID = "ac6889fe-7f09-4f71-ac0e-4d8850b72d2f";
+                    _credentials.workspaceID = "af012d44-256c-43ef-abfc-60938316552c";
                 }
 
                 HttpContext.Session.SetObjectAsJson("Watson", _credentials);

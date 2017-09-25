@@ -19,10 +19,12 @@ using TemplateCoreParis.WebChat.Models;
 using System.IO;
 using System.Linq;
 using TemplateCoreParis.Controllers;
+using IBM.VCA.Watson.Watson.TextToSpeech;
+using IBM.VCA.Watson.Watson.SpeechToText;
 
 namespace TemplateCoreParis.WebChat
 {
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
     public class ChatBotController : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -55,12 +57,12 @@ namespace TemplateCoreParis.WebChat
 
                 if (_credentials == null)
                 {
-                    //IT-ORVAL=>Test-aje-jg->Aje group Paris
+                    //Org:IT-ORVAL=>Space:VCA=>Conversation-vca->VCA Chatbot
                     _credentials = new WatsonCredentials()
                     {
-                        workspaceID = "ac6889fe-7f09-4f71-ac0e-4d8850b72d2f",
-                        username = "7ecc7e1d-b7a9-472b-9419-a7254411cdd5",
-                        password = "HQJwcbFZclYL"
+                        workspaceID = "af012d44-256c-43ef-abfc-60938316552c",
+                        username = "07ca2289-7747-47de-a5e2-8d2b84b02893",
+                        password = "4hTOaJ6T2Us4"
                     };
                 }
 
@@ -220,7 +222,7 @@ namespace TemplateCoreParis.WebChat
 
                         case "productos":
 
-                            _attachment = CarouselConstructor(GetCarouselList());
+                            _attachment = CarouselConstructor(GetCarouselFlowers());
 
                             break;
                         default:
@@ -232,13 +234,28 @@ namespace TemplateCoreParis.WebChat
                 //Testing purposes
                 string codigo;
 
-                switch (msg)
+                switch (msg.ToUpper())
                 {
-                    case "productos":
-                        _attachment = CarouselConstructor(GetCarouselList());
+                    case "CLIMA":
+                        string _forecast = await CallWeatherAsync(null, null);
+
+                        if (!string.IsNullOrEmpty(_forecast))
+                        {
+                            result.Output.Text.Add(_forecast);
+                        }
+
                         break;
 
-                    case "producto":
+                    case "CHISTE":
+                        string jokePath = Path.Combine(HomeController._wwwRoot.WebRootPath, "data", "chistes.txt");
+                        result.Output.Text.Add(Helpers.Helpers.GetRandomLine(jokePath));
+
+                        break;
+                    case "PRODUCTOS":
+                        _attachment = CarouselConstructor(GetCarouselFlowers());
+                        break;
+
+                    case "PRODUCTO":
                         codigo = "caros";
 
                         if (codigo != "undefined" && codigo != null)
@@ -258,13 +275,13 @@ namespace TemplateCoreParis.WebChat
                             if (producto != null)
                             {
                             }
-                                result.Output.Text.Add(string.Format("El precio de {0} es de {1} soles. Item consultado {2}",
-                                    producto.Nombre, producto.Precio.ToString(), codigo));
+                            result.Output.Text.Add(string.Format("El precio de {0} es de {1} soles. Item consultado {2}",
+                                producto.Nombre, producto.Precio.ToString(), codigo));
                         }
 
                         break;
 
-                    case "pedido":
+                    case "PEDIDO":
                         codigo = "p-001001";
 
                         if (codigo != "undefined" && codigo != null)
@@ -292,6 +309,12 @@ namespace TemplateCoreParis.WebChat
                             }
 
                         }
+
+                        break;
+
+                    case "HISTORIAL":
+                        result.Output.Text.Add("Está seguro de eliminar su historial de conversación?<br/>" +
+                         "<button class='suggestion-btn' style='margin-top: 1rem;' onclick=Sidebar.resetChat2(); Api.sendRequest('Historial Eliminado')>Si, estoy seguro</button>");
 
                         break;
 
@@ -402,7 +425,7 @@ namespace TemplateCoreParis.WebChat
 
         }
 
-        private CarouselTemplate GetCarouselList()
+        private CarouselTemplate GetCarouselFlowers()
         {
             CarouselTemplate _carousel = new CarouselTemplate()
             {
@@ -412,7 +435,7 @@ namespace TemplateCoreParis.WebChat
                                 new ElementTemplate()
                                 {
                                     Img_Url = "images/products/ba15gira.jpg",
-                                    Title = "Cool Tea",
+                                    Title = "Barril de 15 Girasoles",
                                     Buttons = new List<ButtonTemplate>()
                                     {
                                         new ButtonTemplate() { Text = "Ver más", HrefLink = "javascript:void();" }
@@ -421,7 +444,7 @@ namespace TemplateCoreParis.WebChat
                                 new ElementTemplate()
                                 {
                                     Img_Url = "images/products/ca5tul.jpg",
-                                    Title = "Volt",
+                                    Title = "Caja de 5 Tulipanes",
                                     Buttons = new List<ButtonTemplate>()
                                     {
                                         new ButtonTemplate() { Text = "Ver más", HrefLink = "javascript:void();" }
@@ -430,7 +453,7 @@ namespace TemplateCoreParis.WebChat
                                 new ElementTemplate()
                                 {
                                     Img_Url = "images/products/caros.jpg",
-                                    Title = "Sporade",
+                                    Title = "Caja de 6 Rosas",
                                     Buttons = new List<ButtonTemplate>()
                                     {
                                         new ButtonTemplate() { Text = "Ver más", HrefLink = "javascript:void();" }
@@ -439,7 +462,7 @@ namespace TemplateCoreParis.WebChat
                                 new ElementTemplate()
                                 {
                                     Img_Url = "images/products/cu5miger.jpg",
-                                    Title = "Cifrut",
+                                    Title = "Cubo de 5 Tulipanes y Mini Gerberas",
                                     Buttons = new List<ButtonTemplate>()
                                     {
                                         new ButtonTemplate() { Text = "Ver más", HrefLink = "javascript:void();" }
@@ -448,7 +471,7 @@ namespace TemplateCoreParis.WebChat
                                 new ElementTemplate()
                                 {
                                     Img_Url = "images/products/cu9ros.jpg",
-                                    Title = "Big Cola",
+                                    Title = "Cubo de 9 Rosas",
                                     Buttons = new List<ButtonTemplate>()
                                     {
                                         new ButtonTemplate() { Text = "Ver más", HrefLink = "javascript:void();" }
@@ -457,7 +480,7 @@ namespace TemplateCoreParis.WebChat
                                 new ElementTemplate()
                                 {
                                     Img_Url = "images/products/Flo4lilper.jpg",
-                                    Title = "Cielo",
+                                    Title = "Florero de 4 Lilium Perfumados",
                                     Buttons = new List<ButtonTemplate>()
                                     {
                                         new ButtonTemplate() { Text = "Ver más", HrefLink = "javascript:void();" }
@@ -470,6 +493,49 @@ namespace TemplateCoreParis.WebChat
 
         }
 
+        public static CarouselTemplate GetCarouselGlasses()
+        {
+            CarouselTemplate _carousel = new CarouselTemplate()
+            {
+                CarouselName = "CarouselProductos",
+                Elements = new List<ElementTemplate>()
+                            {
+                                new ElementTemplate()
+                                {
+                                    Img_Url = "https://i2.linio.com/p/4fc28b75225834a2e619d4f2782f39a0-product.jpg",
+                                    Title = "De Moda Gafas De Sol Clásico Los Anteojos (Blanco + Gris )",
+                                    Buttons = new List<ButtonTemplate>()
+                                    {
+                                        new ButtonTemplate() { Text = "Ver más",
+                                            HrefLink = "https://www.linio.com.pe/p/de-moda-gafas-de-sol-cla-sico-los-anteojos-blanco-gris--n00u1x" }
+                                    }
+                                },
+                                new ElementTemplate()
+                                {
+                                    Img_Url = "https://i2.linio.com/p/a85c04e8bb77277b20da7421180f4e4a-product.jpg",
+                                    Title = "Clásico Polarizado Las Gafas De Sol Ceja Irregular Tendencia Los Anteojos Lentes -Gris",
+                                    Buttons = new List<ButtonTemplate>()
+                                    {
+                                        new ButtonTemplate() { Text = "Ver más",
+                                            HrefLink = "https://www.linio.com.pe/p/cla-sico-polarizado-las-gafas-de-sol-ceja-irregular-tendencia-los-anteojos-lentes-gris-tnwvdg" }
+                                    }
+                                },
+                                new ElementTemplate()
+                                {
+                                    Img_Url = "https://i2.linio.com/p/ba187dfe6ceb6ce2becc297e0fcd702a-product.jpg",
+                                    Title = "Clásico Polarizado Las Gafas De Sol Ceja Irregular Tendencia Los Anteojos Lentes -Azul Mercurio",
+                                    Buttons = new List<ButtonTemplate>()
+                                    {
+                                        new ButtonTemplate() { Text = "Ver más",
+                                            HrefLink = "https://www.linio.com.pe/p/cla-sico-polarizado-las-gafas-de-sol-ceja-irregular-tendencia-los-anteojos-lentes-azul-mercurio-ynps2w" }
+                                    }
+                                }
+                            }
+            };
+
+            return _carousel;
+
+        }
 
         public bool IsValidEmail(string _email)
         {
@@ -518,7 +584,45 @@ namespace TemplateCoreParis.WebChat
             }
             return match.Groups[1].Value + domainName;
         }
+
+
+        [HttpPost]
+        public string TextToSpeech(string text)
+        {
+            string sample = TextToSpeechServiceExample.Synthesize2(text);
+
+            return sample;
+        }
+
+        public ActionResult Record()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> Upload(string fileName, object blob)
+        {
+            string path = Path.Combine(HomeController._wwwRoot.WebRootPath, "audio", fileName);
+
+            foreach (string f in Directory.EnumerateFiles(Path.Combine(HomeController._wwwRoot.WebRootPath, "audio"), "myRecording*.wav"))
+            {
+                System.IO.File.Delete(f);
+            }
+
+            //TODO: verify if right conversion
+            var file = (IFormFile)blob;
+
+            using (var fileStream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            List<string> transcript = SpeechToTextServiceExample.Recognize2(path);
+
+            return Json(transcript);
+        }
+
+
+
     }
-
-
 }

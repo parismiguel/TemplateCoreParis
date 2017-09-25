@@ -11,6 +11,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using TemplateCoreParis.WebChat;
+using TemplateCoreParis.WebChat.Models;
 
 namespace TemplateCoreParis.Controllers
 {
@@ -160,6 +162,8 @@ namespace TemplateCoreParis.Controllers
         public async Task<IActionResult> MsFaceIdentifyJson(IFormFile file)
         {
             string _text = string.Empty;
+            string _joke = string.Empty;
+            string _promo = string.Empty;
 
             if (file == null)
             {
@@ -215,6 +219,19 @@ namespace TemplateCoreParis.Controllers
                         var _emotionTop = _emotionsList.OrderByDescending(x => x.Value).FirstOrDefault().Key;
 
                         _text = string.Format("Te noto {0}", _emotionTop);
+
+                        var firstFace = _faces[0].FaceAttributes.Glasses.ToString();
+
+                        if (!string.IsNullOrEmpty(firstFace))
+                        {
+                            _promo = WebChatTemplates.CarouselConstructor(ChatBotController.GetCarouselGlasses());
+                        }
+
+                        if (_emotionTop != "feliz")
+                        {
+                            string path = Path.Combine(HomeController._wwwRoot.WebRootPath, "data", "chistes.txt");
+                            _joke = Helpers.Helpers.GetRandomLine(path);
+                        }
                     }
                     else
                     {
@@ -236,11 +253,11 @@ namespace TemplateCoreParis.Controllers
 
                         _text = string.Format("Hola {0}. ", _person.Name) + _text;
 
-                        return Json(new { text = _text, identify = _identify, person = _person, faces = _faces });
+                        return Json(new { text = _text, identify = _identify, person = _person, faces = _faces, joke = _joke, promo = _promo });
 
 
                     }
-                    return Json(new { text = _text, identify = _identify, faces = _faces });
+                    return Json(new { text = _text, identify = _identify, faces = _faces, joke = _joke, promo = _promo });
 
                 }
 

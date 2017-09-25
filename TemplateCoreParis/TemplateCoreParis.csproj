@@ -55,4 +55,8 @@
     <None Include="wwwroot\images\close-button.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\audio\" />
+  </ItemGroup>
+
 </Project>

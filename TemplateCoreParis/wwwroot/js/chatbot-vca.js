@@ -3,6 +3,9 @@ var _password;
 var _userName;
 
 $(function () {
+
+    Sidebar.init();
+
     $(".collapse-chat").click(function () {
         $("#chatbot").toggle();
         $("#textInput").focus();
@@ -71,11 +74,16 @@ $(function () {
 
 }); // Init
 
-function sendRequest(init, _action, _isPayload) {
-    var url = "/Api/ChatBot/";
+
+function sendRequest(init, _action, _isPayload, btnMsg) {
+    var url = "/ChatBot/MessageChatAsync/";
 
     var msg = $("#textInput").val();
     var valid = false;
+
+    if (btnMsg !== null && btnMsg !== undefined) {
+        msg = btnMsg;
+    }
 
     $("#textInput").prop("disabled", true);
     $("#chat_loader").show();
@@ -147,7 +155,7 @@ function sendRequest(init, _action, _isPayload) {
             break;
 
         default:
-            if (init !== true && _isPayload === false) {
+            if (init !== true && _isPayload === false && btnMsg === undefined) {
                 appendMessage(true, msg);
                 valid = false;
             }
@@ -222,8 +230,14 @@ function sendRequest(init, _action, _isPayload) {
 function sendImage(_file) {
     var url = "/Faces/MsFaceIdentifyJson/";
 
+    var counter = 0;
+
     var data = new FormData();
     data.append('file', _file);
+
+
+    $("#textInput").prop("disabled", true);
+    $("#chat_loader").show();
 
     $.ajax({
         url: url,
@@ -235,9 +249,26 @@ function sendImage(_file) {
         .done(function (result) {
         //var obj = JSON.parse(result);
 
-        appendMessage(false, result.text);
+         appendMessage(false, result.text);
+         counter++;
 
-        $("#countChats").text(1);
+         if (result.joke !== null && result.joke !== undefined) {
+             appendMessage(false, "¿Qué tal un chistecito para animar el día?");
+             counter++;
+             appendMessage(false, result.joke);
+             counter++;
+         }
+
+         if (result.promo !== null && result.promo !== undefined) {
+             appendMessage(false, "Veo que usas anteojos. ¿Te gustaria adquirir uno nuevo?");
+             counter++;
+             appendMessage(false, result.promo);
+             counter++;
+         }
+
+         $("#countChats").text(counter);
+
+        resetInputChat();
 
     })
         .fail(function (jqXHR, textStatus, errorThrown) {
@@ -372,7 +403,7 @@ function appendImage(isUser, url) {
         "</div>" +
         "<img class='direct-chat-img' src='" + imagen + "' alt= '" + nombre + "'>" +
         "<div class='direct-chat-text' style='text-align:center;'>" +
-        "<img class='responsive' src='" + url + "' alt='Imágen' style='height:17rem;'>" +
+        "<img class='responsive' src='" + url + "' alt='Imágen' style='height:17rem; width: 100%;'>" +
         "</div>" +
         "</div>"
 

@@ -7,9 +7,13 @@
     };
 
     var suggestions = [
-      'Cómo los contacto?',
-      'Dónde quedan sus locales?',
-      'Quiero saber...'
+        'Qué es VCA?',
+        'Qué es Bluemix?',
+        'Qué es IBM?',
+        'Dime más sobre Cloud Services',
+        'Qués es IBM Cognos?',
+        'Qué es IBM Analytics?',
+        'Qué es IoT?'
     ];
 
 
@@ -39,7 +43,7 @@
                     'classNames': ['suggestion-btn'],
                     'attributes': [{
                         'name': 'onclick',
-                        'value': 'Sidebar.toggle(); Api.sendRequest("' + suggestions[i] + '")'
+                        'value': 'Sidebar.toggle(); sendRequest(false, null, false, "' + suggestions[i] + '")'
                     }]
                 }]
             };
@@ -86,7 +90,8 @@
 
         //Api.setResponsePayload(null); //Cannot read property output
 
-                Api.sendRequest(null, null);
+                //Api.sendRequest(null, null);
+                sendRequest(true, null, false);
 
     }
 

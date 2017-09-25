@@ -59,22 +59,24 @@ namespace TemplateCoreParis.WebChat.Models
 
             model =
             "<div id='" + carousel.CarouselName + CarouselTemplate._enum + "' class='carousel slide chatCarousel' data-ride='carousel' data-interval='2000'>" +
-            "<ol class='carousel-indicators'>";
+           
+            //"<ol class='carousel-indicators'>";
 
-            for (int i = 0; i < totalElements; i++)
-            {
-                var _active = string.Empty;
+            //for (int i = 0; i < totalElements; i++)
+            //{
+            //    var _active = string.Empty;
 
-                if (i == 0)
-                {
-                    _active = "active";
-                }
+            //    if (i == 0)
+            //    {
+            //        _active = "active";
+            //    }
 
-                model = model + 
-                    "<li data-target='#" + carousel.CarouselName + CarouselTemplate._enum + "' data-slide-to='" + i + "' class='" + _active + "'></li>";
-            }
+            //    model = model + 
+            //        "<li data-target='#" + carousel.CarouselName + CarouselTemplate._enum + "' data-slide-to='" + i + "' class='" + _active + "'></li>";
+            //}
 
-            model = model + "</ol>" +
+            //model = model + "</ol>"
+
             "<div class='carousel-inner' role='listbox'>";
 
             int _index = 0;
@@ -92,12 +94,13 @@ namespace TemplateCoreParis.WebChat.Models
                 model = model +
                     "<div class='item" + _active + "'>" +
                         "<img src='" + item.Img_Url + "' alt='" + item.Title + "' class='img-responsive'>" +
-                        "<div class='carousel-caption' role='option'>";
+                        "<div class='carousel-caption' role='option'>" +
+                        "<p>" + item.Title + "</p>";
 
                 foreach (var _button in item.Buttons)
                 {
                     model = model +
-                         "<a class='btn btn-primary' href='" + _button.HrefLink + "'>" + _button.Text + "</a>";
+                         "<a class='btn btn-primary' target='_blank' href='" + _button.HrefLink + "'>" + _button.Text + "</a>";
                 }
 
                 model = model +

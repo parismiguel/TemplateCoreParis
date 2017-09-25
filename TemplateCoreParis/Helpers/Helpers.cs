@@ -119,7 +119,18 @@ namespace TemplateCoreParis.Helpers
         {
             return str != null ? WebUtility.UrlDecode(str) : null;
         }
+
+        public static string GetRandomLine(string filename)
+        {
+            Random _rand = new Random();
+
+            var lines = File.ReadAllLines(filename);
+            var lineNumber = _rand.Next(0, lines.Length);
+
+            return lines[lineNumber];
+        }
     }
+
 
     public static class StringHelper
     {

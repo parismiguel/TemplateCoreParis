@@ -22,22 +22,6 @@
     margin: 15px;
 }
 
-#chatbot .fa-2 {
-    margin: .5rem 1rem .5rem .5rem;
-}
-
-#chatbot .fa-2 {
-    font-size: 2em;
-}
-
-.elementPicture {
-    display: inline-flex;
-    align-items: center;
-}
-
-#iconPicture:hover {
-    opacity: 0.6;
-}
 
 #myImage {
     display: none;
@@ -95,7 +79,7 @@ textarea {
 
 /* Carousel */
 .carousel-caption p {
-    font-size: 20px;
+    /*font-size: 20px;*/
     line-height: 1.4;
 }
 

@@ -74,14 +74,14 @@ function doneEncoding( blob ) {
     recIndex++;
 }
 
-function toggleRecording( e ) {
+function toggleRecording(e) {
     if (e.classList.contains("recording")) {
         // stop recording
         audioRecorder.stop();
         e.classList.remove("recording");
         saveAudio();
 
-        $("#textInput").show();
+        $("#inputUserGroup").show();
         $("#chat_loader").hide();
 
         //audioRecorder.getBuffers( gotBuffers );
@@ -90,7 +90,7 @@ function toggleRecording( e ) {
         if (!audioRecorder)
             return;
 
-        $("#textInput").hide();
+        $("#inputUserGroup").hide();
         $("#chat_loader").show();
 
         e.classList.add("recording");

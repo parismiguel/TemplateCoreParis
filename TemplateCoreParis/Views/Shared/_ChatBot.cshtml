@@ -14,7 +14,10 @@
 <section id="chatbot" style="display:none;">
     <div class="box box-primary direct-chat direct-chat-primary">
         <div class="box-header with-border">
-            <h3 class="box-title">VCA Chatbot</h3>
+            <h3 class="box-title" style="margin-right: 1.5rem;">VCA</h3>
+
+            <button id="help" class="tooltip-dialog-btn" onclick="Sidebar.toggle()">FAQ</button>
+
 
             <div id="resetChat" class="btn-group">
                     <button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -49,7 +52,6 @@
             </div>
         </div>
 
-
         <!-- /.box-header -->
         <div class="box-body" id="bodyChat">
             <!-- Conversations are loaded here -->
@@ -57,15 +59,24 @@
 
             </div>
             <!--/.direct-chat-messages-->
-            <!-- /.direct-chat-pane -->
+           
+            <div id="sidebar" class="">
+                <div class="close-div" onclick="Sidebar.toggle()">
+                    <img src="~/images/close-button.png" class="close" alt="close">
+                </div>
+                <p class="pre-bar">Preguntas frecuentes:</p>
+                <ul id="suggestion-list"></ul>
+            </div>
+
         </div>
         <!-- /.box-body -->
+
         <div class="box-footer">
 
             @*<img id="record" src="~/Scripts/record/mic128.png" onclick="toggleRecording(this);" class="">*@
 
             <div class="elementPicture">
-                <i class="fa fa-microphone fa-2" aria-hidden="false" onclick="toggleRecording(this);"></i>
+                <i id="iconMic" class="fa fa-microphone fa-2" aria-hidden="false" onclick="toggleRecording(this);"></i>
 
                 <i id="iconPicture" class="fa fa-picture-o fa-2"></i>
                 <span class="name" style="font-size:xx-small;">No ha seleccionado imágen</span>
@@ -73,7 +84,7 @@
             </div>
 
             <form action="javascript:sendRequest()" method="post">
-                <div class="input-group">
+                <div class="input-group" id="inputUserGroup">
                     <input id="textInput" type="text" name="message" placeholder="Escribir mensaje ..."
                            class="form-control" />
 
@@ -91,13 +102,6 @@
                 <span>Pensando...</span>
             </div>
 
-            <div id="sidebar" class="">
-                <div class="close-div" onclick="Sidebar.toggle()">
-                    <img src="~/images/close-button.png" class="close" alt="close">
-                </div>
-                <p class="pre-bar">Preguntas frecuentes:</p>
-                <ul id="suggestion-list"></ul>
-            </div>
         </div>
         <!-- /.box-footer-->
     </div>

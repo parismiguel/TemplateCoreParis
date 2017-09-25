@@ -1,6 +1,7 @@
 ﻿using IBM.VCA.Watson.Watson.TextToSpeech.Model;
 using System;
 using System.IO;
+using TemplateCoreParis.Controllers;
 
 namespace IBM.VCA.Watson.Watson.TextToSpeech
 {
@@ -120,31 +121,31 @@ namespace IBM.VCA.Watson.Watson.TextToSpeech
         }
         #endregion
 
-        //public static string Synthesize2(string text)
-        //{
-        //    TextToSpeechService _textToSpeech = new TextToSpeechService();
-        //    _textToSpeech.SetCredential(_username, _password);
+        public static string Synthesize2(string text)
+        {
+            TextToSpeechService _textToSpeech = new TextToSpeechService();
+            _textToSpeech.SetCredential(_username, _password);
 
-        //    var sample = _textToSpeech.Synthesize(text, Voice.ES_SOFIA, AudioType.WAV);
+            var sample = _textToSpeech.Synthesize(text, Voice.ES_SOFIA, AudioType.WAV);
 
-        //    string file = "sample_" + Guid.NewGuid() + ".wav";
-        //    string path = string.Format("{0}\\{1}",
-        //              HttpContext.Current.Server.MapPath("/Images"), file);
+            string file = "sample_" + Guid.NewGuid() + ".wav";
 
-        //    foreach (string f in Directory.EnumerateFiles(HttpContext.Current.Server.MapPath("/Images/"), "sample_*.wav"))
-        //    {
-        //        File.Delete(f);
-        //    }
+            string path = Path.Combine(HomeController._wwwRoot.WebRootPath, "audio", file);
 
-          
-        //    using (var fileStream = File.Create(path))
-        //    {
-        //        sample.CopyTo(fileStream);
-        //        path = "/Images/" + file;
-        //    }
+            foreach (string f in Directory.EnumerateFiles(Path.Combine(HomeController._wwwRoot.WebRootPath, "audio"), "sample_*.wav"))
+            {
+                File.Delete(f);
+            }
 
-        //    return path;
-        //}
+
+            using (var fileStream = File.Create(path))
+            {
+                sample.CopyTo(fileStream);
+                path = "/audio/" + file;
+            }
+
+            return path;
+        }
 
         #region Get Custom Voice Models
         private void GetCustomVoiceModels()

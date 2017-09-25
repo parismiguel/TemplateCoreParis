@@ -1,0 +1,45 @@
+[
+  {
+    "Codigo": "caros",
+    "ImagenRuta": "../images/caros.jpg",
+    "Nombre": "Caja de 6 Rosas",
+    "Descripcion": "Caja con 6 finas rosas, el mejor regalo para demostrar tus sentimientos. Esta fina presentación que tu pareja no olvidará.Cada rosa viene insertada a un tubo de agua (aquapick) para la correcta hidratación durante el traslado",
+    "Precio": "54"
+  },
+	{
+		"Codigo": "ba15gira",
+		"ImagenRuta": "../images/ba15gira.jpg",
+		"Nombre": "Barril de 15 Girasoles",
+		"Descripcion": "Alegra sus días con nuestro arreglo de 15 Girasoles en un lindo barril rustico",
+		"Precio": "68"
+	},
+	{
+		"Codigo": "ca5tul",
+		"ImagenRuta": "../images/ca5tul.jpg",
+		"Nombre": "Caja de 5 Tulipanes",
+		"Descripcion": "Delicada y clásica caja de 5 tulipanes exóticos, variedad de colores solicita tu color favorito.Cada tulipan viene insertado a un tubo de agua(aquapick)para la correcta hidratación durante el traslado.",
+		"Precio": "69"
+	},
+	{
+		"Codigo": "cu9ros",
+		"ImagenRuta": "../images/cu9ros.jpg",
+		"Nombre": "Cubo de 9 Rosas",
+		"Descripcion": "Original arreglo de 9 rosas decorado en un cubo de vidrio acompañado de delicado follaje de estación",
+		"Precio": "84"
+	},
+  {
+    "Codigo": "Flo4lilper",
+    "ImagenRuta": "../images/flo4lilper.jpg",
+    "Nombre": "Florero de 4 Lilium Perfumados",
+    "Descripcion": "Se convirtió en un clásico y preferido arreglo, excelente presentación en un florero de vidrio transparente con 4 finos lilium perfumados y delicado follaje. Alto: 35 cm Aprox.",
+    "Precio": "89"
+  },
+	{
+		"Codigo": "cu5miger",
+		"ImagenRuta": "../images/cu5miger.jpg",
+		"Nombre": "Cubo de 5 Tulipanes y Mini Gerberas",
+		"Descripcion": "Delicado cubo de 5 Tulipanes y mini gerberas en colores variados en un lindo florero de vidrio en forma de cubo",
+		"Precio": "95"
+	}
+
+]

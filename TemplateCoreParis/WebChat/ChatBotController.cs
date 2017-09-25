@@ -15,7 +15,10 @@ using System.Threading.Tasks;
 using static TemplateCoreParis.WebChat.GoogleUser;
 using static TemplateCoreParis.WebChat.Models.WebChatTemplates;
 using static IBM.VCA.Watson.Watson.WatsonConversationService;
-
+using TemplateCoreParis.WebChat.Models;
+using System.IO;
+using System.Linq;
+using TemplateCoreParis.Controllers;
 
 namespace TemplateCoreParis.WebChat
 {
@@ -225,12 +228,73 @@ namespace TemplateCoreParis.WebChat
                     }
                 }
 
+
                 //Testing purposes
+                string codigo;
+
                 switch (msg)
                 {
                     case "productos":
                         _attachment = CarouselConstructor(GetCarouselList());
                         break;
+
+                    case "producto":
+                        codigo = "caros";
+
+                        if (codigo != "undefined" && codigo != null)
+                        {
+                            var path = Path.Combine(HomeController._wwwRoot.WebRootPath, "data", "products.json");
+                            string products;
+
+                            using (StreamReader reader = System.IO.File.OpenText(path))
+                            {
+                                products = reader.ReadToEnd();
+                            }
+
+                            List<Producto> lista = JsonConvert.DeserializeObject<List<Producto>>(products);
+
+                            Producto producto = lista.Where(x => x.Codigo == codigo).FirstOrDefault();
+
+                            if (producto != null)
+                            {
+                            }
+                                result.Output.Text.Add(string.Format("El precio de {0} es de {1} soles. Item consultado {2}",
+                                    producto.Nombre, producto.Precio.ToString(), codigo));
+                        }
+
+                        break;
+
+                    case "pedido":
+                        codigo = "p-001001";
+
+                        if (codigo != "undefined" && codigo != null)
+                        {
+                            var path = Path.Combine(HomeController._wwwRoot.WebRootPath, "data", "pedidos.json");
+                            string pedidos;
+
+                            using (StreamReader reader = System.IO.File.OpenText(path))
+                            {
+                                pedidos = reader.ReadToEnd();
+                            }
+
+                            List<Pedido> lista = JsonConvert.DeserializeObject<List<Pedido>>(pedidos);
+
+                            Pedido pedido = lista.Where(x => x.NroPedido == codigo).FirstOrDefault();
+
+                            if (pedido == null)
+                            {
+                                result.Output.Text.Add("No se encuentra el número de pedido indicado");
+                            }
+                            else
+                            {
+                                result.Output.Text.Add(string.Format("Su pedido con N° {0} para {1} se encuentra en ruta.",
+                                    pedido.NroPedido, pedido.Nombre));
+                            }
+
+                        }
+
+                        break;
+
                     default:
                         break;
                 }
@@ -347,7 +411,7 @@ namespace TemplateCoreParis.WebChat
                             {
                                 new ElementTemplate()
                                 {
-                                    Img_Url = "images/products/cool_tea.png",
+                                    Img_Url = "images/products/ba15gira.jpg",
                                     Title = "Cool Tea",
                                     Buttons = new List<ButtonTemplate>()
                                     {
@@ -356,7 +420,7 @@ namespace TemplateCoreParis.WebChat
                                 },
                                 new ElementTemplate()
                                 {
-                                    Img_Url = "images/products/volt.jpg",
+                                    Img_Url = "images/products/ca5tul.jpg",
                                     Title = "Volt",
                                     Buttons = new List<ButtonTemplate>()
                                     {
@@ -365,7 +429,7 @@ namespace TemplateCoreParis.WebChat
                                 },
                                 new ElementTemplate()
                                 {
-                                    Img_Url = "images/products/sporade.jpg",
+                                    Img_Url = "images/products/caros.jpg",
                                     Title = "Sporade",
                                     Buttons = new List<ButtonTemplate>()
                                     {
@@ -374,7 +438,7 @@ namespace TemplateCoreParis.WebChat
                                 },
                                 new ElementTemplate()
                                 {
-                                    Img_Url = "images/products/cifrut.png",
+                                    Img_Url = "images/products/cu5miger.jpg",
                                     Title = "Cifrut",
                                     Buttons = new List<ButtonTemplate>()
                                     {
@@ -383,7 +447,7 @@ namespace TemplateCoreParis.WebChat
                                 },
                                 new ElementTemplate()
                                 {
-                                    Img_Url = "images/products/big_cola.jpg",
+                                    Img_Url = "images/products/cu9ros.jpg",
                                     Title = "Big Cola",
                                     Buttons = new List<ButtonTemplate>()
                                     {
@@ -392,17 +456,8 @@ namespace TemplateCoreParis.WebChat
                                 },
                                 new ElementTemplate()
                                 {
-                                    Img_Url = "images/products/agua_cielo.png",
+                                    Img_Url = "images/products/Flo4lilper.jpg",
                                     Title = "Cielo",
-                                    Buttons = new List<ButtonTemplate>()
-                                    {
-                                        new ButtonTemplate() { Text = "Ver más", HrefLink = "javascript:void();" }
-                                    }
-                                },
-                                new ElementTemplate()
-                                {
-                                    Img_Url = "images/products/pulp.png",
-                                    Title = "Pulp",
                                     Buttons = new List<ButtonTemplate>()
                                     {
                                         new ButtonTemplate() { Text = "Ver más", HrefLink = "javascript:void();" }
